@@ -100,7 +100,7 @@ class _DetailsPageState extends State<DetailsPage> {
                         Icons.arrow_drop_down,
                         color: Colors.black,
                       ),
-                      value: value,
+                      value: value == null ? items[0] : value,
                       items: items.map(buildMenuItem).toList(),
                       onChanged: (value) => setState(
                         () => this.value = value!,
@@ -157,6 +157,7 @@ class _DetailsPageState extends State<DetailsPage> {
         height: 45,
         child: Center(
           child: Inputfield(
+            keyboardType: TextInputType.number,
             text: "Enter amount",
           ),
         ),

@@ -2,6 +2,7 @@ import 'package:aptusseafood/view/HomePageOption.dart';
 import 'package:aptusseafood/view/logiinScreen.dart';
 import 'package:aptusseafood/widgets/CommonWidgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
@@ -121,14 +122,17 @@ class SignUpPage extends StatelessWidget {
 class Inputfield extends StatelessWidget {
   final String text;
   final Icon? icon;
-  Inputfield({this.icon, required this.text});
+  final TextInputType? keyboardType;
+  Inputfield({this.icon, required this.text , this.keyboardType});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 55,
       child: TextField(
+     keyboardType: keyboardType,
         decoration: InputDecoration(
+        
             filled: true,
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),

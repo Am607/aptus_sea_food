@@ -16,3 +16,32 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+// class LoginSplash extends StatefulWidget {
+//   const LoginSplash({Key? key}) : super(key: key);
+
+//   @override
+//   _LoginSplashState createState() => _LoginSplashState();
+// }
+
+// class _LoginSplashState extends State<LoginSplash> {
+//   @override
+//   void initState() {
+//     super.initState();
+//     init();
+//   }
+
+//   init() async {
+
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Center(
+//         child: CircularProgressIndicator(),
+//       ),
+//     );
+//   }
+// }
+//  raz@gmail.com  12345678  AP10014 a@gmail.com

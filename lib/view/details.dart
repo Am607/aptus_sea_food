@@ -1,19 +1,26 @@
 import 'package:aptusseafood/constants/constants.dart';
+import 'package:aptusseafood/model/productModel.dart';
 import 'package:aptusseafood/view/review.dart';
 import 'package:aptusseafood/view/signUp.dart';
 import 'package:aptusseafood/widgets/CommonWidgets.dart';
 import 'package:flutter/material.dart';
 
 class DetailsPage extends StatefulWidget {
-  const DetailsPage({Key? key}) : super(key: key);
+  final Datuma? data;
+  DetailsPage({Key? key, this.data}) : super(key: key);
 
   @override
   _DetailsPageState createState() => _DetailsPageState();
 }
 
 class _DetailsPageState extends State<DetailsPage> {
+  final TextEditingController priceController = TextEditingController();
+
   final items = ['Cash', 'Epos'];
-  String? value;
+  String value = '';
+  String price = '0';
+  double remaingAmount = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +35,7 @@ class _DetailsPageState extends State<DetailsPage> {
       ),
       body: ListView(
         children: [
-          rowWidget(name: 'Total', price: '\$200'),
+          rowWidget(name: 'Total', price: '\$${widget.data!.price}.'),
           SizedBox(
             height: 5,
           ),
@@ -55,8 +62,16 @@ class _DetailsPageState extends State<DetailsPage> {
                 name: 'Back'),
             appButtonTwo(
                 function: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Review()));
+                  setState(() {
+                    remaingAmount = double.parse('$price');
+                  });
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Review(
+                              data: widget.data,
+                              paymentMode: value == '' ? items[0] : value,
+                              remaingAmount: remaingAmount)));
                 },
                 name: 'Next')
           ],
@@ -82,7 +97,7 @@ class _DetailsPageState extends State<DetailsPage> {
               Text(
                 name,
                 style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 16,
                     color: Colors.grey[600],
                     fontWeight: FontWeight.w600),
               ),
@@ -100,7 +115,7 @@ class _DetailsPageState extends State<DetailsPage> {
                         Icons.arrow_drop_down,
                         color: Colors.black,
                       ),
-                      value: value == null ? items[0] : value,
+                      value: value == '' ? items[0] : value,
                       items: items.map(buildMenuItem).toList(),
                       onChanged: (value) => setState(
                         () => this.value = value!,
@@ -138,7 +153,7 @@ class _DetailsPageState extends State<DetailsPage> {
               Text(
                 name,
                 style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 16,
                     color: Colors.grey[600],
                     fontWeight: FontWeight.w600),
               ),
@@ -157,6 +172,9 @@ class _DetailsPageState extends State<DetailsPage> {
         height: 45,
         child: Center(
           child: Inputfield(
+            onChangedFuntion: (a) => setState(() => this.price = a),
+            isEmail: false,
+            controller: priceController,
             keyboardType: TextInputType.number,
             text: "Enter amount",
           ),

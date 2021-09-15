@@ -1,9 +1,11 @@
+import 'package:aptusseafood/Controller/authApi.dart';
 import 'package:aptusseafood/constants/constants.dart';
 import 'package:aptusseafood/view/HomePageOption.dart';
 import 'package:aptusseafood/view/signUp.dart';
 
 import 'package:aptusseafood/widgets/CommonWidgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -46,8 +48,34 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 30,
             ),
             appButton(
-                function: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomePageOption())),
+                function: () {
+                  AuthApi authApi = AuthApi();
+                  authApi
+                      .login(
+                          email: userNameController.text,
+                          password: passwordController.text)
+                      .then((value) async {
+                    print(value.status);
+                    if (value.status == true) {
+                      toast('login success');
+                      //! adding token
+                      final storage = new FlutterSecureStorage();
+                      await storage.write(
+                          key: 'token', value: value.token.toString());
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomePageOption()));
+                    } else {
+                      toast('Please enter valid email or password');
+                    }
+                  });
+                },
+
+                //  (
+
+                // ) => Navigator.push(context,
+                //     MaterialPageRoute(builder: (context) => HomePageOption())),
                 name: "Login"),
             signup(context),
           ],

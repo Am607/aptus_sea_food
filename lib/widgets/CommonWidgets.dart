@@ -1,6 +1,7 @@
 import 'package:aptusseafood/constants/constants.dart';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 //! app eding section including Icon and app name
@@ -84,7 +85,7 @@ Widget rowWidget({required String name, required String price}) {
     child: Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.only(bottom: 6),
           child: Divider(
             color: Colors.grey,
           ),
@@ -95,14 +96,14 @@ Widget rowWidget({required String name, required String price}) {
             Text(
               name,
               style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 16,
                   color: Colors.grey[600],
                   fontWeight: FontWeight.w600),
             ),
             Text(
               '$price',
               style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 16,
                   color: Colors.black,
                   fontWeight: FontWeight.w600),
             )
@@ -112,3 +113,12 @@ Widget rowWidget({required String name, required String price}) {
     ),
   );
 }
+
+toast(String text) => Fluttertoast.showToast(
+    msg: "$text",
+    toastLength: Toast.LENGTH_SHORT,
+    gravity: ToastGravity.BOTTOM,
+    timeInSecForIosWeb: 1,
+    backgroundColor: Colors.red,
+    textColor: Colors.white,
+    fontSize: 16.0);

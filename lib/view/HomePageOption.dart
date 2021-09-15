@@ -1,5 +1,7 @@
+import 'package:aptusseafood/view/bulkOrder/HomepageB.dart';
 import 'package:aptusseafood/view/logiinScreen.dart';
 import 'package:aptusseafood/view/planPage.dart';
+
 import 'package:aptusseafood/widgets/CommonWidgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,6 +13,27 @@ class HomePageOption extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          actions: [
+            InkWell(
+              onTap: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()));
+              },
+              child: Center(
+                child: Text(
+                  "Logout",
+                  style: TextStyle(color: Colors.blue),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 20,
+            )
+          ],
+        ),
         body: Container(
           alignment: Alignment.center,
           child: Column(
@@ -31,10 +54,8 @@ class HomePageOption extends StatelessWidget {
                 height: 30,
               ),
               appButton(
-                  function: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HomePageOption())),
+                  function: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => HomePageB())),
                   name: "Bulk Order"),
             ],
           ),

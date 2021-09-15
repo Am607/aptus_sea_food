@@ -10,3 +10,5 @@ const appName = "Aptus Sea Food";
 const greyColor = 0xFFDEDEDE;
 const forgetColor = 0xFFF37A20;
 const buttonColor = 0xFF5EC401;
+
+final baseurl = 'http://aptusseafoods.com/api/';

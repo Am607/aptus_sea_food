@@ -1,3 +1,5 @@
+import 'package:aptusseafood/Controller/restApi.dart';
+import 'package:aptusseafood/model/privilageCardModel.dart';
 import 'package:aptusseafood/view/HomePageOption.dart';
 import 'package:aptusseafood/widgets/CommonWidgets.dart';
 import 'package:flutter/material.dart';
@@ -8,20 +10,14 @@ class PrivilagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          SizedBox(height: 120),
-          newMethod(id: '123', name: "Order Number"),
-          SizedBox(height: 30),
-          newMethod(id: '123464646', name: "privilage card No"),
-          SizedBox(height: 100),
-          Center(
-            child: Text(
-              'Thanks for choosing \n     Aptus Seafood',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
-            ),
-          ),
-        ],
+      body: FutureBuilder<Carda>(
+        future: RsetAPi().getCartNo(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          return body(data: snapshot.data);
+        },
       ),
       bottomSheet: Padding(
         padding: const EdgeInsets.only(bottom: 60),
@@ -38,19 +34,37 @@ class PrivilagePage extends StatelessWidget {
     );
   }
 
-  Row newMethod({required String name, required String id}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+  ListView body({Carda? data}) {
+    return ListView(
       children: [
-        Text(
-          '$name : ',
-          style: TextStyle(fontSize: 18),
+        SizedBox(height: 120),
+        SizedBox(height: 30),
+        newMethod(
+            id: '${data!.data!.privillageCardNo}', name: "privilage card No"),
+        SizedBox(height: 100),
+        Center(
+          child: Text(
+            'Thanks for choosing \n     Aptus Seafood',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
+          ),
         ),
-        Text(
-          '$id',
-          style: TextStyle(fontSize: 18),
-        )
       ],
     );
   }
+}
+
+Row newMethod({required String name, required String id}) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(
+        '$name : ',
+        style: TextStyle(fontSize: 18),
+      ),
+      Text(
+        '$id',
+        style: TextStyle(fontSize: 18),
+      )
+    ],
+  );
 }

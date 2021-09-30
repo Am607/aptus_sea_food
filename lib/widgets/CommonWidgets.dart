@@ -5,19 +5,19 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 //! app eding section including Icon and app name
-Padding headingSection() {
+Padding headingSection(BuildContext context) {
   return Padding(
-    padding: EdgeInsets.only(top: 55.0),
+    padding: EdgeInsets.only(top: 14.0),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
           width: 150,
           height: 150,
-          child: Image.asset(appIocon),
+          child: Image.asset(appIocon1),
         ),
         SizedBox(
-          height: 15,
+          height: MediaQuery.of(context).size.height * .01,
         ),
         Text(
           appName,
@@ -36,7 +36,7 @@ InkWell appButton({required void Function() function, required String name}) {
     child: Padding(
       padding: EdgeInsets.only(left: 25, right: 25, bottom: 2, top: 2),
       child: Container(
-        height: 55,
+        height: 52,
         // margin: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0),
@@ -114,11 +114,18 @@ Widget rowWidget({required String name, required String price}) {
   );
 }
 
-toast(String text) => Fluttertoast.showToast(
-    msg: "$text",
-    toastLength: Toast.LENGTH_SHORT,
-    gravity: ToastGravity.BOTTOM,
-    timeInSecForIosWeb: 1,
-    backgroundColor: Colors.red,
-    textColor: Colors.white,
-    fontSize: 16.0);
+toast(String text) {
+  return Fluttertoast.showToast(
+      msg: "$text",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0);
+}
+
+toasta({required BuildContext context, required String msg}) =>
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("$msg"),
+    ));

@@ -11,7 +11,7 @@ class AuthApi {
   late String token;
 
   Future<Login> login({required String email, required String password}) async {
-    print('get product called');
+    print('login called');
     final endpoint = 'login';
     final body = {'email': email, 'password': password};
     final reponse =
@@ -53,7 +53,6 @@ class AuthApi {
     print(response.body);
     var data = signupFromJson(response.body);
 
-  
     token = data.token!;
     return data;
   }

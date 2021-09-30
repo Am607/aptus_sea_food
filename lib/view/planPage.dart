@@ -1,3 +1,4 @@
+import 'package:aptusseafood/Controller/localdb.dart';
 import 'package:aptusseafood/Controller/restApi.dart';
 import 'package:aptusseafood/constants/constants.dart';
 import 'package:aptusseafood/model/planModel.dart';
@@ -6,7 +7,6 @@ import 'package:aptusseafood/view/productPage.dart';
 import 'package:aptusseafood/widgets/CommonWidgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 
 class PlanPage extends StatefulWidget {
   const PlanPage({Key? key}) : super(key: key);
@@ -18,10 +18,10 @@ class PlanPage extends StatefulWidget {
 String indexA = '';
 
 class _PlanPageState extends State<PlanPage> {
-  List<String> plans = ['6am-7am', '7am-8am', '8am-9am'];
-  late Future<Dats> data;
+  List<String> plans = ['choose a time slote'];
+  late Future<Plan> data;
 
-  String? value;
+  String? valuea;
   String planName = '';
 
   @override
@@ -30,49 +30,120 @@ class _PlanPageState extends State<PlanPage> {
     int();
   }
 
-  int() {
-    data = RsetAPi().fetchPlan();
+  int() async {
+    data = RsetAPi().fetchPlan().then((value) {
+      List<Datum>? dat = value.timeSlotes;
+
+      for (dynamic a = 0; a < value.timeSlotes?.length; a++) {
+        setState(() {
+          plans.add('${dat?[a].timeSlot}');
+        });
+
+        print('called');
+        print(plans);
+      }
+
+      return value;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    print('buid widget');
+    print('buid widget id 320');
+    print(valuea);
 
-   
-    return Scaffold(body: body(context));
+    return Scaffold(
+      body: body(context),
+      bottomSheet: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 18, left: 18, right: 18),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              appButtonTwo(
+                  function: () {
+                    Navigator.pop(context);
+                  },
+                  name: 'Back'),
+              appButtonTwo(
+                  function: () {
+                    if (indexA == '') {
+                      toast('Please Select One Plan');
+                    } else if (valuea == null ||
+                        valuea == 'choose a time slote') {
+                      toast('Please Select time slote');
+                    } else {
+                      int() {
+                        print(db);
+                        db.clear();
+                        print(db);
+                        dbx.clear();
+                        dby.clear();
+                        print(dby);
+                        print(dbx);
+                      }
+
+                      int();
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProductPage(
+                                    planName: planName,
+                                    index: indexA,
+                                    timeSlote: "$valuea",
+                                  )));
+                    }
+                  },
+                  name: 'Next')
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Container body(BuildContext context) {
     return Container(
-      child: Column(
+      child: ListView(
         children: [
           SizedBox(
-            height: 40,
+            height: MediaQuery.of(context).size.height * .04,
           ),
+          // Padding(
+          //   padding: EdgeInsets.only(left: 28, bottom: 4),
+          //   child: Text('Please choose a time slote'),
+          // ),
           timeSlot(),
           SizedBox(
-            height: 10,
+            height: MediaQuery.of(context).size.height * .01,
           ),
           Container(
             height: MediaQuery.of(context).size.height * .7,
-            child: FutureBuilder<Dats>(
+            child: FutureBuilder<Plan>(
                 future: data,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    print(snapshot.data!.data[2].planName);
+                    // print(snapshot.data?.data?[2].planName);
                     return ListView.builder(
-                        itemCount: snapshot.data!.data.length,
+                        itemCount: snapshot.data?.data?.length,
                         itemBuilder: (context, index) {
+                          final data =
+                              snapshot.data?.timeSlotes?[index].timeSlot;
+
+                          // plans.add(data!);
+
                           return itemCard(
-                              name: snapshot.data!.data[index].planName,
-                              id: snapshot.data!.data[index].id.toString(),
+                              name: '${snapshot.data!.data![index].planName}',
+                              id: snapshot.data!.data![index].id.toString(),
                               isSelcted: indexA,
                               function: () {
                                 setState(() {
                                   indexA =
-                                      snapshot.data!.data[index].id.toString();
+                                      snapshot.data!.data![index].id.toString();
                                   planName =
-                                      snapshot.data!.data[index].planName;
+                                      snapshot.data!.data![index].planName!;
                                 });
                               });
                         });
@@ -84,37 +155,6 @@ class _PlanPageState extends State<PlanPage> {
                   );
                 }),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 40),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                appButtonTwo(
-                    function: () {
-                      Navigator.pop(context);
-                    },
-                    name: 'Back'),
-                SizedBox(
-                  width: 30,
-                ),
-                appButtonTwo(
-                    function: () {
-                      if (indexA == '') {
-                        toast('Please Select One Plan');
-                      } else {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ProductPage(
-                                      planName: planName,
-                                      index: indexA,
-                                    )));
-                      }
-                    },
-                    name: 'Next')
-              ],
-            ),
-          )
         ],
       ),
     );
@@ -126,19 +166,19 @@ class _PlanPageState extends State<PlanPage> {
       required String isSelcted,
       required void Function() function}) {
     return Container(
-      margin: EdgeInsets.only(top: 20, bottom: 10),
+      margin: EdgeInsets.only(top: 10, bottom: 10),
       child: InkWell(
         onTap: function,
         child: Stack(
           children: [
             backround(isSelcted: isSelcted, name: name, id: id),
             Positioned(
-              left: 50,
+              left: 45,
               bottom: 25,
               child: planeName(name: name),
             ),
             Positioned(
-                left: 55,
+                left: 50,
                 top: 15,
                 child: Text(
                   'Plan details',
@@ -185,7 +225,7 @@ class _PlanPageState extends State<PlanPage> {
   Container backround(
       {required String isSelcted, required String name, required String id}) {
     return Container(
-      margin: EdgeInsets.only(right: 26, left: 26, top: 2, bottom: 2),
+      margin: EdgeInsets.only(right: 18, left: 18, top: 2, bottom: 2),
       height: 110,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -197,7 +237,7 @@ class _PlanPageState extends State<PlanPage> {
     return Container(
         height: 45,
         width: 400,
-        margin: EdgeInsets.only(left: 26, right: 26),
+        margin: EdgeInsets.only(left: 18, right: 18),
         padding: EdgeInsets.only(left: 10, right: 10),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12), color: Color(greyColor)),
@@ -209,14 +249,17 @@ class _PlanPageState extends State<PlanPage> {
               Icons.arrow_drop_down,
               color: Colors.black,
             ),
-            value: value == null ? plans[0] : value,
-            onChanged: (value) => setState(() => this.value = value!),
+            value: valuea == null ? plans[0] : valuea,
+            onChanged: (value) => setState(() => this.valuea = value),
           ),
         ));
   }
 
-  DropdownMenuItem<String> buildmenuItem(String item) => DropdownMenuItem(
-        child: Text(item),
-        value: item,
-      );
+  DropdownMenuItem<String> buildmenuItem(String item) {
+    // setState(() {});
+    return DropdownMenuItem(
+      child: Text(item),
+      value: item,
+    );
+  }
 }

@@ -4,7 +4,8 @@ import 'package:aptusseafood/widgets/CommonWidgets.dart';
 import 'package:flutter/material.dart';
 
 class SuccessPage extends StatelessWidget {
-  const SuccessPage({Key? key}) : super(key: key);
+  final String id;
+  SuccessPage({Key? key, required this.id}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +22,19 @@ class SuccessPage extends StatelessWidget {
           Center(
               child: Text(
             'Your order is Successfull',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           )),
+          SizedBox(
+            height: 10,
+          ),
+          newMethod(id: '$id', name: "Order Id"),
           SizedBox(
             height: 30,
           ),
           Center(
               child: Text(
             '     Click here to Generate \n Order Number and privilage \n       card number to get \n offers and updation through \n               out the Year',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
           )),
           SizedBox(
             height: 30,
@@ -51,8 +56,8 @@ class SuccessPage extends StatelessWidget {
   Center roundTick() {
     return Center(
       child: Container(
-        height: 180,
-        width: 180,
+        height: 150,
+        width: 150,
         child: Stack(
           children: [
             Container(
@@ -63,8 +68,8 @@ class SuccessPage extends StatelessWidget {
             ),
             Center(
               child: Container(
-                height: 160,
-                width: 160,
+                height: 130,
+                width: 130,
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.white, width: 1.5),
                   borderRadius: BorderRadius.circular(200),

@@ -1,3 +1,4 @@
+import 'package:aptusseafood/Controller/localdb.dart';
 import 'package:aptusseafood/view/bulkOrder/HomepageB.dart';
 import 'package:aptusseafood/view/logiinScreen.dart';
 import 'package:aptusseafood/view/planPage.dart';
@@ -6,8 +7,19 @@ import 'package:aptusseafood/widgets/CommonWidgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class HomePageOption extends StatelessWidget {
+class HomePageOption extends StatefulWidget {
   const HomePageOption({Key? key}) : super(key: key);
+
+  @override
+  _HomePageOptionState createState() => _HomePageOptionState();
+}
+
+class _HomePageOptionState extends State<HomePageOption> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,27 +47,52 @@ class HomePageOption extends StatelessWidget {
           ],
         ),
         body: Container(
+          height: MediaQuery.of(context).size.height,
           alignment: Alignment.center,
           child: Column(
             children: [
-              SizedBox(
-                height: 30,
-              ),
-              headingSection(),
+              // SizedBox(
+              //   height: 30,
+              // ),
+              headingSection(context),
               midText(),
-              SizedBox(
-                height: 30,
-              ),
+              SizedBox(height: MediaQuery.of(context).size.height * .03),
               appButton(
-                  function: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => PlanPage())),
+                  function: () {
+                    int() {
+                      print(db);
+                      db.clear();
+                      print(db);
+                      dbx.clear();
+                      print(dbx);
+                    }
+
+                    int();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => PlanPage()));
+                  },
                   name: "Xmax Exppress"),
-              SizedBox(
-                height: 30,
-              ),
+              // SizedBox(
+              //   height: 30,
+              // ),
+              SizedBox(height: MediaQuery.of(context).size.height * .04),
               appButton(
-                  function: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomePageB())),
+                  function: () {
+                    int() {
+                      print(db);
+                      db.clear();
+                      print(db);
+                      dbx.clear();
+                      print(dbx);
+                    }
+
+                    int();
+                    Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomePageB()))
+                        .then((value) => setState(() {}));
+                  },
                   name: "Bulk Order"),
             ],
           ),

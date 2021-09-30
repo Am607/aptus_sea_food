@@ -1,13 +1,17 @@
+import 'package:aptusseafood/Controller/localdb.dart';
 import 'package:aptusseafood/constants/constants.dart';
 import 'package:aptusseafood/model/productModel.dart';
 import 'package:aptusseafood/view/review.dart';
 import 'package:aptusseafood/view/signUp.dart';
+
 import 'package:aptusseafood/widgets/CommonWidgets.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
 class DetailsPage extends StatefulWidget {
   final Datuma? data;
-  DetailsPage({Key? key, this.data}) : super(key: key);
+  final String? timeSlote;
+  DetailsPage({Key? key, this.data, this.timeSlote}) : super(key: key);
 
   @override
   _DetailsPageState createState() => _DetailsPageState();
@@ -15,7 +19,7 @@ class DetailsPage extends StatefulWidget {
 
 class _DetailsPageState extends State<DetailsPage> {
   final TextEditingController priceController = TextEditingController();
-
+  GlobalKey<FormState> _form = GlobalKey<FormState>();
   final items = ['Cash', 'Epos'];
   String value = '';
   String price = '0';
@@ -23,6 +27,16 @@ class _DetailsPageState extends State<DetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<double> amount = [];
+    for (int i = 0; i < dbx.length; i++) {
+      amount.add(double.parse("${dbx[i]?.price}"));
+    }
+    for (int i = dbx.length; i < (dbx.length + dby.length); i++) {
+      amount.add(double.parse("${dby[i - dbx.length]?.price}"));
+    }
+    var pricea = amount.sum;
+    print(amount);
+    print(pricea);
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.blue),
@@ -35,7 +49,7 @@ class _DetailsPageState extends State<DetailsPage> {
       ),
       body: ListView(
         children: [
-          rowWidget(name: 'Total', price: '\$${widget.data!.price}.'),
+          rowWidget(name: 'Total', price: '\$$pricea'),
           SizedBox(
             height: 5,
           ),
@@ -50,7 +64,7 @@ class _DetailsPageState extends State<DetailsPage> {
           rowWidgetTree(name: 'Remain Amount'),
         ],
       ),
-      bottomSheet: Padding(
+      bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(left: 18, right: 18, bottom: 32),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -65,13 +79,19 @@ class _DetailsPageState extends State<DetailsPage> {
                   setState(() {
                     remaingAmount = double.parse('$price');
                   });
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Review(
-                              data: widget.data,
-                              paymentMode: value == '' ? items[0] : value,
-                              remaingAmount: remaingAmount)));
+
+                  if (priceController.text == '') {
+                    toast('Please remaining amount');
+                  } else {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Review(
+                                timesolte: widget.timeSlote,
+                                totalAmount: pricea,
+                                paymentMode: value == '' ? items[0] : value,
+                                remaingAmount: remaingAmount)));
+                  }
                 },
                 name: 'Next')
           ],
@@ -171,12 +191,15 @@ class _DetailsPageState extends State<DetailsPage> {
         width: 180,
         height: 45,
         child: Center(
-          child: Inputfield(
-            onChangedFuntion: (a) => setState(() => this.price = a),
-            isEmail: false,
-            controller: priceController,
-            keyboardType: TextInputType.number,
-            text: "Enter amount",
+          child: Form(
+            key: _form,
+            child: Inputfield(
+              onChangedFuntion: (a) => setState(() => this.price = a),
+              isEmail: false,
+              controller: priceController,
+              keyboardType: TextInputType.number,
+              text: "Enter amount",
+            ),
           ),
         ),
       ),

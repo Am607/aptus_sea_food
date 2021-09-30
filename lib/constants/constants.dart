@@ -6,6 +6,8 @@ const regularheading = TextStyle(
 );
 
 const appIocon = "assets/splashicon.png";
+const appIocon1 = "assets/c.png";
+
 const appName = "Aptus Sea Food";
 const greyColor = 0xFFDEDEDE;
 const forgetColor = 0xFFF37A20;

@@ -4,12 +4,12 @@
 
 import 'dart:convert';
 
-Card cardFromJson(String str) => Card.fromJson(json.decode(str));
+Carda cardFromJson(String str) => Carda.fromJson(json.decode(str));
 
-String cardToJson(Card data) => json.encode(data.toJson());
+String cardToJson(Carda data) => json.encode(data.toJson());
 
-class Card {
-    Card({
+class Carda {
+    Carda({
         this.data,
         this.status,
     });
@@ -17,8 +17,8 @@ class Card {
     Data? data;
     bool? status;
 
-    factory Card.fromJson(Map<String, dynamic> json) => Card(
-        data: Data.fromJson(json["data"]),
+    factory Carda.fromJson(Map<String, dynamic> json) => Carda(
+        data:  json["status"] == true ? Data.fromJson(json["data"]) : null,
         status: json["status"],
     );
 

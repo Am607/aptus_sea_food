@@ -1,3 +1,4 @@
+import 'package:aptusseafood/Controller/restApi.dart';
 import 'package:aptusseafood/constants/constants.dart';
 import 'package:aptusseafood/view/bulkOrder/Details.dart';
 
@@ -14,6 +15,22 @@ class ModeOfDelivery extends StatefulWidget {
 
 class _ModeOfDeliveryState extends State<ModeOfDelivery> {
   String isSlected = '';
+  TextEditingController controllera = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    int();
+  }
+
+  int() async {
+    RsetAPi().getUserInfo().then((value) {
+      print('${value.data?.pickUpLocation}');
+      controllera
+        ..text =
+            '${value.data?.pickUpLocation} ${value.data?.street} ${value.data?.suburb}${value.data?.state} pin ${value.data?.pincode} no ${value.data?.mobile}';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +41,7 @@ class _ModeOfDeliveryState extends State<ModeOfDelivery> {
             padding: const EdgeInsets.all(20.0),
             child: Text(
               "Mode of Delivery",
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 18),
             ),
           ),
           Padding(
@@ -55,14 +72,15 @@ class _ModeOfDeliveryState extends State<ModeOfDelivery> {
             padding: const EdgeInsets.all(20.0),
             child: Text(
               "Delivery Address",
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 18),
             ),
           ),
           Container(
             padding: const EdgeInsets.only(left: 26, right: 26),
             child: TextFormField(
-              initialValue: 'signup address found here',
+              // initialValue: 'signup address found here',
               maxLines: 5,
+              controller: controllera,
               decoration: InputDecoration(
                   filled: true,
                   border: OutlineInputBorder(
@@ -79,26 +97,38 @@ class _ModeOfDeliveryState extends State<ModeOfDelivery> {
           )
         ],
       ),
-      bottomSheet: Padding(
-        padding: const EdgeInsets.only(top: 40, bottom: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            appButtonTwo(
-                function: () {
-                  Navigator.pop(context);
-                },
-                name: 'Back'),
-            SizedBox(
-              width: 30,
-            ),
-            appButtonTwo(
-                function: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => DetailsPagea()));
-                },
-                name: 'Next')
-          ],
+      bottomNavigationBar: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              appButtonTwo(
+                  function: () {
+                    Navigator.pop(context);
+                  },
+                  name: 'Back'),
+              SizedBox(
+                width: 30,
+              ),
+              appButtonTwo(
+                  function: () {
+                    if (isSlected == '') {
+                      toast('Please select Mode of delivery');
+                    } else {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DetailsPagea(
+                                    address: controllera.text,
+                                    modeof: isSlected,
+                                  )));
+                    }
+                  },
+                  name: 'Next')
+            ],
+          ),
         ),
       ),
     );
@@ -120,7 +150,7 @@ class _ModeOfDeliveryState extends State<ModeOfDelivery> {
           child: Center(
               child: Text(
             name,
-            style: TextStyle(color: Colors.black, fontSize: 20),
+            style: TextStyle(color: Colors.black, fontSize: 18),
           )),
         ),
       ),

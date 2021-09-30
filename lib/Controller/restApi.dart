@@ -1,4 +1,7 @@
+import 'package:aptusseafood/Controller/localdb.dart';
 import 'package:aptusseafood/constants/constants.dart';
+import 'package:aptusseafood/model/bulkOrderModel.dart';
+import 'package:aptusseafood/model/bulkProductModel.dart';
 import 'package:aptusseafood/model/orderModel.dart';
 import 'package:aptusseafood/model/planModel.dart';
 import 'package:aptusseafood/model/privilageCardModel.dart';
@@ -6,12 +9,13 @@ import 'package:aptusseafood/model/productModel.dart';
 import 'package:aptusseafood/model/userInfoModel.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:aptusseafood/model/bulkProductModel.dart' as a;
 
 class RsetAPi {
   var client = http.Client();
   final storage = new FlutterSecureStorage();
 
-  Future<Dats> fetchPlan() async {
+  Future<Plan> fetchPlan() async {
     print('fetch plan called');
     final endPoint = 'get-plans';
     final response = await client.get(Uri.parse('$baseurl$endPoint'));
@@ -19,7 +23,7 @@ class RsetAPi {
     if (response.statusCode == 200) {
       // print(response.body);
       var joinString = response.body;
-      return datsFromJson(joinString);
+      return planFromJson(joinString);
     } else {
       throw Exception('failed to load');
     }
@@ -54,8 +58,7 @@ class RsetAPi {
   }
   //! for geting privilage card number
 
-  Future<Card> getCartNo(
-      {required String email, required String password}) async {
+  Future<Carda> getCartNo() async {
     print('get cardNoCalled');
     final endpoint = 'generete-card-number';
 
@@ -66,7 +69,7 @@ class RsetAPi {
     final reponse =
         await client.post(Uri.parse('$baseurl$endpoint'), headers: header);
     print(reponse.body);
-    Card data = cardFromJson(reponse.body);
+    Carda data = cardFromJson(reponse.body);
 
     return data;
   }
@@ -77,12 +80,13 @@ class RsetAPi {
     required String timeslot,
     required String orderamount,
     required String advance,
-    required String planid,
+    // required String planid,
     required String paymentmethod,
-    required String price,
-    required String name,
+    // required String price,
+    // required String name,
   }) async {
-    print('signup fuction called');
+    print('order fuction called');
+    print(dbx.length);
 
     String? token = await storage.read(key: 'token');
 
@@ -94,16 +98,95 @@ class RsetAPi {
       'order_amount': orderamount,
       'time_slot': timeslot,
       'payment_method': paymentmethod,
-      'orderitems[0][price]': price,
-      'orderitems[0][name] ': name,
-      'plan_id': planid,
+      'plan_id': dbx[0]?.planId,
     };
+
+    for (int i = 0; i < dbx.length; i++) {
+      body.addAll({'orderitems[$i][price]': "${dbx[i]?.price}"});
+    }
+
+    for (int i = 0; i < dbx.length; i++) {
+      body.addAll({'orderitems[$i][name]': "${dbx[i]?.productName}"});
+    }
+    int z = dbx.length + dby.length;
+    print(z);
+    for (int a = dbx.length; a < z; a++) {
+      body.addAll({'orderitems[$a][price]': "${dby[a - dbx.length]?.price}"});
+    }
+
+    for (int a = dbx.length; a < z; a++) {
+      body.addAll(
+          {'orderitems[$a][name]': "${dby[a - dbx.length]?.productName}"});
+    }
 
     final response = await client.post(Uri.parse('$baseurl$endPont'),
         body: body, headers: header);
     print(response.body);
 
     var data = orderDatabackFromJson(response.body);
+
+    return data;
+  }
+
+  //! //////////////////////////////////////////////////////////////
+  // builk order apis
+
+  Future<Suplier> getBulkProducts() async {
+    print('get product called');
+    final endpoint = 'get-bulk-products';
+    final reponse = await client.get(Uri.parse('$baseurl$endpoint'));
+    print(reponse.body);
+    return suplierFromJson(reponse.body);
+  }
+
+  Future<BulkProduct> bulkOrder({
+    required String modeofdelivery,
+    required String address,
+    required String transactionid,
+    required String amount,
+  }) async {
+    print('Bulk order fuction called');
+
+    String? token = await storage.read(key: 'token');
+
+    var header = {
+      'Authorization': 'Bearer $token',
+    };
+
+    final endPont = 'bulk-order';
+
+    var body = {
+      'order_amount': amount,
+      'mode_of_delivery': modeofdelivery,
+      'address': address,
+      'transaction_id': transactionid,
+    };
+
+    for (int i = 0; i < db.length; i++) {
+      body.addAll({'orderitems[$i][id]': "${db[i].values.first?.id}"});
+    }
+    for (int i = 0; i < db.length; i++) {
+      body.addAll(
+          {'orderitems[$i][price]': "${db[i].values.first?.unitPrice}"});
+    }
+    for (int i = 0; i < db.length; i++) {
+      body.addAll({'orderitems[$i][quantity]': "${db[i].keys.first}"});
+    }
+
+    // var body2;
+
+    // for (int i = 0; 1 < 3; i++) {
+    //   body2 = {
+    //     'orderitems[$i][id]': "${dataa.id}",
+    //   };
+    // }
+
+    // final body3 = {...body, ...body2};
+    final response = await client.post(Uri.parse('$baseurl$endPont'),
+        body: body, headers: header);
+    print(response.body);
+
+    var data = bulkProductFromJson(response.body);
 
     return data;
   }

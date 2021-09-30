@@ -29,11 +29,8 @@ class ConfirmPage extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 60),
         child: appButton(
             function: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => HomePageOption()),
-                (Route<dynamic> route) => false,
-              );
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => HomePageOption()));
             },
             name: "Back to Home Page"),
       ),

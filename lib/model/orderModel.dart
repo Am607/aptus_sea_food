@@ -13,14 +13,16 @@ class OrderDataback {
   OrderDataback({
     this.data,
     this.status,
+    this.message,
   });
 
   Data? data;
   bool? status;
-
+  String? message;
   factory OrderDataback.fromJson(Map<String, dynamic> json) => OrderDataback(
         data: json["status"] == true ? Data.fromJson(json["data"]) : null,
         status: json["status"],
+        message:  json['status']== false? json['message'] : null,
       );
 
   Map<String, dynamic> toJson() => {

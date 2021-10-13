@@ -13,7 +13,7 @@ class SuccessPage extends StatelessWidget {
       body: ListView(
         children: [
           SizedBox(
-            height: 105,
+            height: 70,
           ),
           roundTick(),
           SizedBox(
@@ -33,21 +33,25 @@ class SuccessPage extends StatelessWidget {
           ),
           Center(
               child: Text(
-            '     Click here to Generate \n Order Number and privilage \n       card number to get \n offers and updation through \n               out the Year',
+            '     Click here to Generate \n Order Number and Privilage \n       Card number to get \n offers and updation through \n               out the Year',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
           )),
           SizedBox(
             height: 30,
           ),
-          appButton(
-              function: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => PrivilagePage()),
-                  (Route<dynamic> route) => false,
-                );
-              },
-              name: "Click")
+          Container(
+            margin: EdgeInsets.only(left: 20, right: 20),
+            child: appButtonBlack(
+                function: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => PrivilagePage()),
+                    (Route<dynamic> route) => false,
+                  );
+                },
+                name: "Click",
+                context: context),
+          )
         ],
       ),
     );
@@ -63,7 +67,7 @@ class SuccessPage extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(200),
-                color: Color(buttonColor),
+                color: Colors.black,
               ),
             ),
             Center(
@@ -73,7 +77,7 @@ class SuccessPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.white, width: 1.5),
                   borderRadius: BorderRadius.circular(200),
-                  color: Color(buttonColor),
+                  color: Colors.black,
                 ),
               ),
             ),

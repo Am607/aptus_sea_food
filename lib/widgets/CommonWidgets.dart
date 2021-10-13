@@ -21,7 +21,7 @@ Padding headingSection(BuildContext context) {
         ),
         Text(
           appName,
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 21),
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 18),
         ),
       ],
     ),
@@ -47,6 +47,33 @@ InkWell appButton({required void Function() function, required String name}) {
             child: Text(
           name,
           style: TextStyle(color: Colors.white, fontSize: 20),
+        )),
+      ),
+    ),
+  );
+}
+
+InkWell appButtonBlack(
+    {required void Function() function,
+    required String name,
+    required BuildContext context}) {
+  return InkWell(
+    onTap: function,
+    child: Padding(
+      padding: EdgeInsets.only(left: 25, right: 25, bottom: 2, top: 2),
+      child: Container(
+        height: 48,
+        width: MediaQuery.of(context).size.width * .76,
+        // margin: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.0),
+            color: Colors.black,
+            border: Border.all(color: Colors.white)),
+
+        child: Center(
+            child: Text(
+          name,
+          style: TextStyle(color: Colors.white, fontSize: 18),
         )),
       ),
     ),
@@ -81,15 +108,10 @@ InkWell appButtonTwo(
 //! row card Widget
 Widget rowWidget({required String name, required String price}) {
   return Container(
+    // padding: EdgeInsets.only(top: 10),
     margin: EdgeInsets.only(left: 20, right: 20, top: 1),
     child: Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 6),
-          child: Divider(
-            color: Colors.grey,
-          ),
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -109,6 +131,48 @@ Widget rowWidget({required String name, required String price}) {
             )
           ],
         ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          // child: Divider(
+          //   color: Colors.grey,
+          // ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget rowWidgeta({required String name, required String price}) {
+  return Container(
+    // padding: EdgeInsets.only(top: 10),
+    margin: EdgeInsets.only(left: 20, right: 20, top: 1),
+    child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              name,
+              style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w600),
+            ),
+            Text(
+              '$price',
+              style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600),
+            )
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 6),
+          child: Divider(
+            color: Colors.grey,
+          ),
+        ),
       ],
     ),
   );
@@ -120,7 +184,7 @@ toast(String text) {
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
+      backgroundColor: Colors.black,
       textColor: Colors.white,
       fontSize: 16.0);
 }

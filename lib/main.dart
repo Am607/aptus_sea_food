@@ -1,10 +1,18 @@
 import 'package:aptusseafood/view/logiinScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // set the publishable key for Stripe - this is mandatory
+  Stripe.publishableKey =
+      'pk_test_51JfPscSJq6xO3Mt6uViE2n4zhx5ADWcPOtklEsa0NYyHqvG3srn4n8S6OpEAawPguWHamXTZiI6o2bAvsw9Hlrwu00aXjMcxjI';
+
   runApp(MyApp());
 }
 
+// import io.flutter.embedding.android.FlutterFragmentActivity
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 

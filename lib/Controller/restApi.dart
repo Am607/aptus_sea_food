@@ -6,6 +6,7 @@ import 'package:aptusseafood/model/orderModel.dart';
 import 'package:aptusseafood/model/planModel.dart';
 import 'package:aptusseafood/model/privilageCardModel.dart';
 import 'package:aptusseafood/model/productModel.dart';
+import 'package:aptusseafood/model/stripModel.dart';
 import 'package:aptusseafood/model/userInfoModel.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -82,7 +83,8 @@ class RsetAPi {
     required String advance,
     // required String planid,
     required String paymentmethod,
-    // required String price,
+    required String date,
+     required String eftNO,
     // required String name,
   }) async {
     print('order fuction called');
@@ -97,12 +99,15 @@ class RsetAPi {
       'advance': advance,
       'order_amount': orderamount,
       'time_slot': timeslot,
+      'date': date,
       'payment_method': paymentmethod,
       'plan_id': dbx[0]?.planId,
+      'eftpos': eftNO,
     };
 
     for (int i = 0; i < dbx.length; i++) {
       body.addAll({'orderitems[$i][price]': "${dbx[i]?.price}"});
+      body.addAll({'orderitems[$i][id]': "${dbx[i]?.id}"});
     }
 
     for (int i = 0; i < dbx.length; i++) {
@@ -112,6 +117,7 @@ class RsetAPi {
     print(z);
     for (int a = dbx.length; a < z; a++) {
       body.addAll({'orderitems[$a][price]': "${dby[a - dbx.length]?.price}"});
+      body.addAll({'orderitems[$a][id]': "${dby[a - dbx.length]?.id}"});
     }
 
     for (int a = dbx.length; a < z; a++) {
@@ -144,6 +150,9 @@ class RsetAPi {
     required String address,
     required String transactionid,
     required String amount,
+     required String abnNo,
+    required String companyName,
+    required String date,
   }) async {
     print('Bulk order fuction called');
 
@@ -160,6 +169,9 @@ class RsetAPi {
       'mode_of_delivery': modeofdelivery,
       'address': address,
       'transaction_id': transactionid,
+      'abn_number': abnNo,
+      'company_name': companyName,
+      'date': date,
     };
 
     for (int i = 0; i < db.length; i++) {
@@ -189,5 +201,24 @@ class RsetAPi {
     var data = bulkProductFromJson(response.body);
 
     return data;
+  }
+
+  Future<Strip> makeIntent(String amount) async {
+    print(amount);
+    print('make intetnt called');
+    final endPoint = 'payment-intent?amount=$amount';
+    final qparams = {'amount': amount};
+    String qString = Uri(queryParameters: qparams).query;
+    final response = await client.post(
+      Uri.parse('$baseurl$endPoint'),
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      // print(response.body);
+      var joinString = response.body;
+      return stripFromJson(joinString);
+    } else {
+      throw Exception('failed to load');
+    }
   }
 }

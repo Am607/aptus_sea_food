@@ -1,6 +1,7 @@
 import 'package:aptusseafood/Controller/localdb.dart';
 import 'package:aptusseafood/constants/constants.dart';
 import 'package:aptusseafood/model/productModel.dart';
+import 'package:aptusseafood/view/productPage.dart';
 import 'package:aptusseafood/view/review.dart';
 import 'package:aptusseafood/view/signUp.dart';
 
@@ -11,7 +12,10 @@ import 'package:collection/collection.dart';
 class DetailsPage extends StatefulWidget {
   final Datuma? data;
   final String? timeSlote;
-  DetailsPage({Key? key, this.data, this.timeSlote}) : super(key: key);
+  final String date;
+
+  DetailsPage({Key? key, this.data, this.timeSlote, required this.date})
+      : super(key: key);
 
   @override
   _DetailsPageState createState() => _DetailsPageState();
@@ -19,8 +23,9 @@ class DetailsPage extends StatefulWidget {
 
 class _DetailsPageState extends State<DetailsPage> {
   final TextEditingController priceController = TextEditingController();
+  final TextEditingController recieptController = TextEditingController();
   GlobalKey<FormState> _form = GlobalKey<FormState>();
-  final items = ['Cash', 'Epos'];
+  final items = ['Cash', 'EFTPOS'];
   String value = '';
   String price = '0';
   double remaingAmount = 0;
@@ -39,64 +44,53 @@ class _DetailsPageState extends State<DetailsPage> {
     print(pricea);
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         iconTheme: IconThemeData(color: Colors.blue),
         elevation: 0,
-        backgroundColor: Colors.white30,
+        backgroundColor: Colors.black,
         title: Text(
           'Details',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.white),
         ),
       ),
       body: ListView(
         children: [
-          rowWidget(name: 'Total', price: '\$$pricea'),
           SizedBox(
-            height: 5,
+            height: 20,
           ),
-          rowWidgetTwo(name: 'Paymentmode'),
-          SizedBox(
-            height: 5,
-          ),
-          rowWidget(name: 'EFTPOS Reciept No', price: '001245656'),
-          SizedBox(
-            height: 15,
-          ),
+          rowWidgeta(name: 'Total', price: '\$$pricea'),
+          rowWidgetTwo(name: 'Payment Mode'),
+          rowWidgetFour(name: 'EFTPOS Receipt No'),
           rowWidgetTree(name: 'Remain Amount'),
         ],
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left: 18, right: 18, bottom: 32),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            appButtonTwo(
-                function: () {
-                  Navigator.pop(context);
-                },
-                name: 'Back'),
-            appButtonTwo(
-                function: () {
-                  setState(() {
-                    remaingAmount = double.parse('$price');
-                  });
+      bottomNavigationBar: navigationBar(
+          next: () {
+            setState(() {
+              remaingAmount = double.parse('$price');
+            });
 
-                  if (priceController.text == '') {
-                    toast('Please remaining amount');
-                  } else {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Review(
-                                timesolte: widget.timeSlote,
-                                totalAmount: pricea,
-                                paymentMode: value == '' ? items[0] : value,
-                                remaingAmount: remaingAmount)));
-                  }
-                },
-                name: 'Next')
-          ],
-        ),
-      ),
+            if (priceController.text == '') {
+              toast('Please remaining amount');
+            } else {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Review(
+                          eftNo: recieptController.text,
+                          date: widget.date,
+                          timesolte: widget.timeSlote,
+                          totalAmount: pricea,
+                          paymentMode: value == '' ? items[0] : value,
+                          remaingAmount: remaingAmount)));
+            }
+          },
+          context: context,
+          back: () {
+            Navigator.pop(context);
+          },
+          backname: 'Back',
+          nextName: 'Next'),
     );
   }
 
@@ -105,12 +99,6 @@ class _DetailsPageState extends State<DetailsPage> {
       margin: EdgeInsets.only(left: 20, right: 20, top: 1),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Divider(
-              color: Colors.grey,
-            ),
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -122,7 +110,7 @@ class _DetailsPageState extends State<DetailsPage> {
                     fontWeight: FontWeight.w600),
               ),
               Container(
-                height: 45,
+                height: 42,
                 width: 120,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
@@ -146,6 +134,12 @@ class _DetailsPageState extends State<DetailsPage> {
               )
             ],
           ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Divider(
+              color: Colors.grey,
+            ),
+          ),
         ],
       ),
     );
@@ -161,12 +155,6 @@ class _DetailsPageState extends State<DetailsPage> {
       margin: EdgeInsets.only(left: 20, right: 20, top: 1),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: Divider(
-              color: Colors.grey,
-            ),
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -180,6 +168,12 @@ class _DetailsPageState extends State<DetailsPage> {
               priceSlot(),
             ],
           ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: Divider(
+              color: Colors.grey,
+            ),
+          ),
         ],
       ),
     );
@@ -188,8 +182,8 @@ class _DetailsPageState extends State<DetailsPage> {
   priceSlot() {
     return Center(
       child: Container(
-        width: 180,
-        height: 45,
+        width: MediaQuery.of(context).size.width * .45,
+        height: 42,
         child: Center(
           child: Form(
             key: _form,
@@ -198,8 +192,57 @@ class _DetailsPageState extends State<DetailsPage> {
               isEmail: false,
               controller: priceController,
               keyboardType: TextInputType.number,
-              text: "Enter amount",
+              text: "Enter Amount",
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget rowWidgetFour({
+    required String name,
+  }) {
+    return Container(
+      margin: EdgeInsets.only(left: 20, right: 20, top: 1),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                name,
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w600),
+              ),
+              ePos(),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15),
+            child: Divider(
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  ePos() {
+    return Center(
+      child: Container(
+        width: MediaQuery.of(context).size.width * .45,
+        height: 42,
+        child: Center(
+          child: Inputfield(
+            onChangedFuntion: (a) => setState(() => this.price = a),
+            isEmail: false,
+            controller: recieptController,
+            keyboardType: TextInputType.text,
+            text: "Receipt No",
           ),
         ),
       ),

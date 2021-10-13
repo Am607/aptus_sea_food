@@ -9,59 +9,57 @@ Signup signupFromJson(String str) => Signup.fromJson(json.decode(str));
 String signupToJson(Signup data) => json.encode(data.toJson());
 
 class Signup {
-    Signup({
-        this.token,
-        this.status,
-        this.data,
-    });
+  Signup({this.token, this.status, this.data, this.message});
 
-    String? token;
-    bool? status;
-    Data? data;
+  String? token;
+  bool? status;
+  Data? data;
+  String? message;
 
-    factory Signup.fromJson(Map<String, dynamic> json) => Signup(
+  factory Signup.fromJson(Map<String, dynamic> json) => Signup(
         token: json["token"],
         status: json["status"],
-        data: Data.fromJson(json["data"]),
-    );
+        data: json["status"] == true ? Data.fromJson(json["data"]) : null,
+        message: json['status'] == false ? json['message'] : null,
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "token": token,
         "status": status,
         "data": data!.toJson(),
-    };
+      };
 }
 
 class Data {
-    Data({
-        this.name,
-        this.email,
-        this.street,
-        this.mobile,
-        this.suburb,
-        this.pincode,
-        this.state,
-        this.privillageCardNo,
-        this.pickUpLocation,
-        this.updatedAt,
-        this.createdAt,
-        this.id,
-    });
+  Data({
+    this.name,
+    this.email,
+    this.street,
+    this.mobile,
+    this.suburb,
+    this.pincode,
+    this.state,
+    this.privillageCardNo,
+    this.pickUpLocation,
+    this.updatedAt,
+    this.createdAt,
+    this.id,
+  });
 
-    String ?name;
-    String? email;
-    String? street;
-    String ?mobile;
-    String? suburb;
-    String ?pincode;
-    String ?state;
-    String? privillageCardNo;
-    String? pickUpLocation;
-    DateTime? updatedAt;
-    DateTime? createdAt;
-    int? id;
+  String? name;
+  String? email;
+  String? street;
+  String? mobile;
+  String? suburb;
+  String? pincode;
+  String? state;
+  String? privillageCardNo;
+  String? pickUpLocation;
+  DateTime? updatedAt;
+  DateTime? createdAt;
+  int? id;
 
-    factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
         name: json["name"],
         email: json["email"],
         street: json["street"],
@@ -74,9 +72,9 @@ class Data {
         updatedAt: DateTime.parse(json["updated_at"]),
         createdAt: DateTime.parse(json["created_at"]),
         id: json["id"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "name": name,
         "email": email,
         "street": street,
@@ -89,5 +87,5 @@ class Data {
         "updated_at": updatedAt?.toIso8601String(),
         "created_at": createdAt?.toIso8601String(),
         "id": id,
-    };
+      };
 }

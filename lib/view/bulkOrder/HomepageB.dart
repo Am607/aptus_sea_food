@@ -3,6 +3,7 @@ import 'package:aptusseafood/Controller/restApi.dart';
 import 'package:aptusseafood/constants/constants.dart';
 import 'package:aptusseafood/model/bulkProductModel.dart';
 import 'package:aptusseafood/view/bulkOrder/deliveryOption.dart';
+import 'package:aptusseafood/view/productPage.dart';
 
 import 'package:aptusseafood/view/signUp.dart';
 import 'package:aptusseafood/widgets/CommonWidgets.dart';
@@ -42,157 +43,165 @@ class _HomePageBState extends State<HomePageB> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        // key: _scaffoldKey,
-        appBar: AppBar(
-          actions: [
-            Container(
-              padding: EdgeInsets.only(top: 10, right: 10),
-              child: Badge(
-                badgeColor: Colors.red,
-                shape: BadgeShape.circle,
-                toAnimate: false,
-                badgeContent:
-                    Text('${db.length}', style: TextStyle(color: Colors.white)),
-                child: Icon(Icons.shopping_cart),
+          // key: _scaffoldKey,
+          appBar: AppBar(
+            actions: [
+              Container(
+                padding: EdgeInsets.only(top: 10, right: 10),
+                child: Badge(
+                  badgeColor: Colors.blue,
+                  shape: BadgeShape.circle,
+                  toAnimate: false,
+                  badgeContent: Text('${db.length}',
+                      style: TextStyle(color: Colors.white)),
+                  child: Icon(Icons.shopping_cart),
+                ),
               ),
+              SizedBox(
+                width: 10,
+              ),
+            ],
+            backgroundColor: Colors.black,
+            iconTheme: IconThemeData(color: Colors.white),
+            centerTitle: true,
+            title: Text(
+              'Bulk Order',
+              style: TextStyle(color: Colors.white),
             ),
-            SizedBox(
-              width: 10,
-            ),
-          ],
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(color: Colors.blue),
-          title: Text(
-            'Bulk Order',
-            style: TextStyle(color: Colors.blue),
+            elevation: 0,
           ),
-          elevation: 0,
-        ),
-        body: FutureBuilder<Suplier>(
-            future: data,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                // print(snapshot.data?.toJson());
-                return ListView.builder(
-                    itemCount: snapshot.data?.data?.length,
-                    itemBuilder: (context, index) {
-                      // plans.add(data!);
+          body: FutureBuilder<Suplier>(
+              future: data,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  // print(snapshot.data?.toJson());
+                  return ListView.builder(
+                      itemCount: snapshot.data?.data?.length,
+                      itemBuilder: (context, index) {
+                        // plans.add(data!);
 
-                      return itema(
-                          id: '${snapshot.data?.data?[index].id}',
-                          price: double.parse(
-                              '${snapshot.data?.data?[index].unitPrice}'),
-                          data: snapshot.data?.data?[index],
-                          function: () {
-                            setState(() {
-                              isSelected = '${snapshot.data?.data?[index].id}';
-                              datam = snapshot.data?.data?[index];
-                            });
-                          },
-                          name: "${snapshot.data?.data?[index].productName}");
-                    });
-              } else if (snapshot.hasError) {
-                return Text('error');
-              }
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }),
+                        return itema(
+                            id: '${snapshot.data?.data?[index].id}',
+                            price: double.parse(
+                                '${snapshot.data?.data?[index].unitPrice}'),
+                            data: snapshot.data?.data?[index],
+                            function: () {
+                              setState(() {
+                                isSelected =
+                                    '${snapshot.data?.data?[index].id}';
+                                datam = snapshot.data?.data?[index];
+                              });
+                            },
+                            name: "${snapshot.data?.data?[index].productName}");
+                      });
+                } else if (snapshot.hasError) {
+                  return Text('error');
+                }
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }),
 
-        //!------------------------action button
+          //!------------------------action button
 
-        floatingActionButton: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // newMethod("o", 'a'),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * .1,
-            ),
-            Form(
-              key: _form,
-              child: Container(
-                width: MediaQuery.of(context).size.width * .4,
-                height: MediaQuery.of(context).size.height * .07,
-                // padding: EdgeInsets.only(top: 45, right: 26, left: 26),
-                child: Center(
-                  child: Inputfield(
-                    controller: controller,
-                    isEmail: false,
-                    keyboardType: TextInputType.number,
-                    text: "Qty",
+          floatingActionButton: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // newMethod("o", 'a'),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * .1,
+              ),
+              Form(
+                key: _form,
+                child: Container(
+                  width: MediaQuery.of(context).size.width * .4,
+                  height: MediaQuery.of(context).size.height * .062,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.black)),
+                  // padding: EdgeInsets.only(top: 45, right: 26, left: 26),
+                  child: Center(
+                    child: Inputfield(
+                      controller: controller,
+                      isEmail: false,
+                      keyboardType: TextInputType.number,
+                      text: "Qty",
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            SizedBox(
-              width: MediaQuery.of(context).size.width * .05,
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * .2,
-            ),
-            appButton(
-                function: () {
-                  if (datam.toString() == 'null') {
-                    // MotionToast.warning(
-                    //         title: "Warning Motion Toast",
-                    //         titleStyle: TextStyle(fontWeight: FontWeight.bold),
-                    //         description: "This is a Warning")
-                    //     .show(context);
-
-                    toast('Please Select one product');
-                  } else if (controller.text == '') {
-                    toast('Enter quantity');
-                  } else {
-                    if (double.parse('${datam?.availableQuantity}') <
-                        double.parse('${controller.text}')) {
-                      toast('Selected Quantity is not available');
-                    }
-                    var qty = double.parse(controller.text);
-                    db.add({qty: datam});
-                    toast('Item added');
-                    print(db);
-
-                    // controller.clear();
-                    setState(() {});
-                  }
-                },
-                name: 'Add'),
-          ],
-        ),
-        bottomNavigationBar: Container(
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 20, left: 15, right: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                appButtonTwo(
+              // SizedBox(
+              //   width: MediaQuery.of(context).size.width * .05,
+              // ),
+              // SizedBox(
+              //   width: MediaQuery.of(context).size.width * .2,
+              // ),
+              Container(
+                width: MediaQuery.of(context).size.width * .4,
+                child: appButtonBlack(
+                    context: context,
                     function: () {
-                      Navigator.pop(context);
-                    },
-                    name: 'Back'),
-                // SizedBox(
-                //   width: MediaQuery.of(context).size.width * .05,
-                // ),
-                appButtonTwo(
-                    function: () {
-                      if (db.length == 0) {
-                        toast('please add at least one product');
+                      if (datam.toString() == 'null') {
+                        // MotionToast.warning(
+                        //         title: "Warning Motion Toast",
+                        //         titleStyle: TextStyle(fontWeight: FontWeight.bold),
+                        //         description: "This is a Warning")
+                        //     .show(context);
+
+                        toast('Please Select one product');
+                      } else if (controller.text == '' ||
+                          controller.text == "0") {
+                        toast('Enter a valid  quantity');
                       } else {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ModeOfDelivery()));
+                        bool present = false;
+                        for (var i = 0; i < db.length; i++) {
+                          // you may have to check the equality operator
+                          if (datam?.id == db[i].values.first?.id) {
+                            present = true;
+                            break;
+                          }
+                        }
+                        if (double.parse('${datam?.availableQuantity}') <
+                            double.parse('${controller.text}')) {
+                          toast('Selected Quantity is not available');
+                        } else if (present) {
+                          toast('The product is already added');
+                          setState(() {});
+                        } else {
+                          var qty = double.parse(controller.text);
+                          db.add({qty: datam});
+                          toast('Item added');
+                          print(db);
+
+                          controller.clear();
+                          setState(() {});
+                        }
                       }
                     },
-                    name: 'Next')
-              ],
-            ),
+                    name: 'Add'),
+              ),
+            ],
           ),
-        ),
-      ),
+          bottomNavigationBar: navigationBar(
+              next: () {
+                if (db.length == 0) {
+                  toast('please add at least one product');
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ModeOfDelivery()));
+                }
+              },
+              context: context,
+              back: () {
+                Navigator.pop(context);
+              },
+              backname: 'Back',
+              nextName: "Next")),
     );
   }
 
@@ -218,33 +227,65 @@ class _HomePageBState extends State<HomePageB> {
     return InkWell(
       onTap: function,
       child: Container(
-        margin: EdgeInsets.only(top: 12, left: 12, right: 12),
+        height: MediaQuery.of(context).size.height * .12,
+        margin: EdgeInsets.only(top: 5),
+        padding: EdgeInsets.zero,
+
         child: Center(
-          child: Row(
-            children: [
-              SizedBox(
-                width: 8,
+          
+          child: ListTile(
+            title: Text(
+              '$name',
+              style: TextStyle(
+                fontSize: 15,
+                color: isSelected == id ? Colors.white : Colors.black,
               ),
-              Container(
-                  child: Expanded(
-                child: Text(
-                  '$name',
-                  style: TextStyle(fontSize: 17),
-                ),
-              )),
-              Expanded(
-                child: Text(
-                  '${data?.availableQuantity}/\$$price ${data?.unit}',
-                  style: TextStyle(fontSize: 17),
-                ),
-              )
-            ],
+            ),
+            subtitle: Text(
+              '${data?.availableQuantity} ${data?.unit}',
+              style: TextStyle(
+                fontSize: 15,
+                color: isSelected == id ? Colors.white : Colors.black,
+              ),
+            ),
+            trailing: Text(
+              '\$$price',
+              style: TextStyle(
+                fontSize: 15,
+                color: isSelected == id ? Colors.white : Colors.black,
+              ),
+            ),
           ),
         ),
-        height: 50,
+
+        // child: Row(
+        //   children: [
+        //     Container(
+        //       height: 20,
+        //       child: ListTile(
+        //         title: Text(
+        //           '$name',
+        //           style: TextStyle(fontSize: 17),
+        //         ),
+        //       ),
+        //     ),
+
+        //     SizedBox(
+        //       width: 8,
+        //     ),
+
+        //     Expanded(
+        //       child: Text(
+        //         '${data?.availableQuantity}/\$$price ${data?.unit}',
+        //         style: TextStyle(fontSize: 17),
+        //       ),
+        //     )
+        //   ],
+        // ),
+
         decoration: BoxDecoration(
-            color: isSelected == id ? Color(0xFF5EC401) : Color(greyColor),
-            borderRadius: BorderRadius.circular(12)),
+          color: isSelected == id ? Colors.black : Colors.white,
+        ),
       ),
     );
   }

@@ -19,15 +19,16 @@ class ConfirmPage extends StatelessWidget {
           SizedBox(height: 60),
           Center(
             child: Text(
-              'Thanks for Shoping \n with Aptus Seafood',
+              'Thanks for Shoping \n with Aptus Seafoods',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
             ),
           ),
         ],
       ),
-      bottomSheet: Padding(
-        padding: const EdgeInsets.only(bottom: 60),
-        child: appButton(
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 60, left: 30, right: 30),
+        child: appButtonBlack(
+            context: context,
             function: () {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => HomePageOption()));

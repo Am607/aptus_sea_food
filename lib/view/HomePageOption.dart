@@ -26,8 +26,16 @@ class _HomePageOptionState extends State<HomePageOption> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           elevation: 0,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.black,
+          title: Align(
+            alignment: Alignment.center,
+            child: Text(
+              'Home',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
           actions: [
             InkWell(
               onTap: () {
@@ -37,7 +45,7 @@ class _HomePageOptionState extends State<HomePageOption> {
               child: Center(
                 child: Text(
                   "Logout",
-                  style: TextStyle(color: Colors.blue),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),
@@ -56,44 +64,62 @@ class _HomePageOptionState extends State<HomePageOption> {
               // ),
               headingSection(context),
               midText(),
-              SizedBox(height: MediaQuery.of(context).size.height * .03),
-              appButton(
-                  function: () {
-                    int() {
-                      print(db);
-                      db.clear();
-                      print(db);
-                      dbx.clear();
-                      print(dbx);
-                    }
+              SizedBox(height: MediaQuery.of(context).size.height * .04),
+              Container(
+                height: MediaQuery.of(context).size.height * .075,
+                child: appButtonBlack(
+                    function: () {
+                      int() {
+                        print(db);
+                        db.clear();
+                        print(db);
+                        dbx.clear();
+                        print(dbx);
+                      }
 
-                    int();
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => PlanPage()));
-                  },
-                  name: "Xmax Exppress"),
+                      int();
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => PlanPage()));
+                    },
+                    name: "Xmas Express",
+                    context: context),
+              ),
               // SizedBox(
               //   height: 30,
               // ),
               SizedBox(height: MediaQuery.of(context).size.height * .04),
-              appButton(
-                  function: () {
-                    int() {
-                      print(db);
-                      db.clear();
-                      print(db);
-                      dbx.clear();
-                      print(dbx);
-                    }
+              Container(
+                height: MediaQuery.of(context).size.height * .075,
+                child: appButtonBlack(
+                    function: () {
+                      int() {
+                        print(db);
+                        db.clear();
+                        print(db);
+                        dbx.clear();
+                        print(dbx);
+                      }
 
-                    int();
-                    Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HomePageB()))
-                        .then((value) => setState(() {}));
-                  },
-                  name: "Bulk Order"),
+                      int();
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePageB()))
+                          .then((value) => setState(() {}));
+                    },
+                    name: "Bulk Order",
+                    context: context),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * .04),
+              Container(
+                height: MediaQuery.of(context).size.height * .075,
+                child: appButtonBlack(
+                    function: () {
+                      toast('Coming Soon');
+                    },
+                    name: "Home Delivery",
+                    context: context),
+              ),
             ],
           ),
         ),
@@ -103,10 +129,10 @@ class _HomePageOptionState extends State<HomePageOption> {
 
   Container midText() {
     return Container(
-      padding: EdgeInsets.only(top: 40),
+      padding: EdgeInsets.only(top: 20),
       child: Text(
-        'Please Choose One \n Option',
-        style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 20),
+        'Browse Your Service',
+        style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 17),
         textAlign: TextAlign.center,
       ),
     );

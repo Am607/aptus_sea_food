@@ -18,7 +18,7 @@ class AuthApi {
         await client.post(Uri.parse('$baseurl$endpoint'), body: body);
     print(reponse.body);
     Login data = loginFromJson(reponse.body);
-    token = data.token!;
+    token ='${data.token}';
     return data;
   }
 
@@ -31,7 +31,7 @@ class AuthApi {
     required String suburb,
     required String pincode,
     required String state,
-    required String pickupLocation,
+  
   }) async {
     print('signup fuction called');
 
@@ -44,7 +44,7 @@ class AuthApi {
       'suburb': suburb,
       'pincode': pincode,
       'state': state,
-      'pick_up_location': pickupLocation,
+     
       'street': street,
     };
 
@@ -53,7 +53,7 @@ class AuthApi {
     print(response.body);
     var data = signupFromJson(response.body);
 
-    token = data.token!;
+    token = '${data.token}';
     return data;
   }
 }

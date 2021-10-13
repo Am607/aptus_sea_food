@@ -19,17 +19,21 @@ class PrivilagePage extends StatelessWidget {
           return body(data: snapshot.data);
         },
       ),
-      bottomSheet: Padding(
+      bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 60),
-        child: appButton(
-            function: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => HomePageOption()),
-                (Route<dynamic> route) => false,
-              );
-            },
-            name: "Back to Home Page"),
+        child: Container(
+          margin: EdgeInsets.only(left: 20, right: 20),
+          child: appButtonBlack(
+              function: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePageOption()),
+                  (Route<dynamic> route) => false,
+                );
+              },
+              name: "Back to Home Page",
+              context: context),
+        ),
       ),
     );
   }
@@ -40,11 +44,11 @@ class PrivilagePage extends StatelessWidget {
         SizedBox(height: 120),
         SizedBox(height: 30),
         newMethod(
-            id: '${data!.data!.privillageCardNo}', name: "privilage card No"),
+            id: '${data!.data!.privillageCardNo}', name: "Privilage card No"),
         SizedBox(height: 100),
         Center(
           child: Text(
-            'Thanks for choosing \n     Aptus Seafood',
+            'Thanks for choosing \n     AptusSea foods',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
           ),
         ),

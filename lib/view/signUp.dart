@@ -25,7 +25,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController pinCount = TextEditingController();
   final TextEditingController stateCount = TextEditingController();
   final TextEditingController textEditingController = TextEditingController();
-  final TextEditingController pickupCount = TextEditingController();
+
   GlobalKey<FormState> _form = GlobalKey<FormState>(); // for storing form state
 
   bool isLoading = false;
@@ -47,15 +47,15 @@ class _SignUpPageState extends State<SignUpPage> {
         AuthApi authApi = AuthApi();
         authApi
             .signup(
-                street: unitCount.text,
-                name: nameCoun.text,
-                password: '12',
-                email: emailCount.text,
-                mobile: phoneCount.text,
-                suburb: suburbCount.text,
-                pincode: pinCount.text,
-                state: stateCount.text,
-                pickupLocation: pickupCount.text)
+          street: unitCount.text,
+          name: nameCoun.text,
+          password: '12',
+          email: emailCount.text,
+          mobile: phoneCount.text,
+          suburb: suburbCount.text,
+          pincode: pinCount.text,
+          state: stateCount.text,
+        )
             .then((value) async {
           if (value.status == true) {
             final storage = new FlutterSecureStorage();
@@ -63,12 +63,18 @@ class _SignUpPageState extends State<SignUpPage> {
             toast('Signup success');
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => HomePageOption()));
-          } else {
+          } else if (value.message == 'The email has already been taken') {
             setState(() {
               isLoading = false;
             });
 
             toast('The email is alredy used');
+          } else {
+            setState(() {
+              isLoading = false;
+            });
+
+            toast('Somthing went wrong');
           }
         });
       }
@@ -77,22 +83,22 @@ class _SignUpPageState extends State<SignUpPage> {
     setState(() {});
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white30,
-        iconTheme: IconThemeData(color: Colors.blue),
-        elevation: 00,
-        actions: [
-          Center(
-            child: Text(
-              '$formattedDate',
-              style: TextStyle(color: Colors.blue, fontSize: 16),
-            ),
-          ),
-          SizedBox(
-            width: 25,
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.white30,
+      //   iconTheme: IconThemeData(color: Colors.blue),
+      //   elevation: 00,
+      //   actions: [
+      //     Center(
+      //       child: Text(
+      //         '$formattedDate',
+      //         style: TextStyle(color: Colors.blue, fontSize: 16),
+      //       ),
+      //     ),
+      //     SizedBox(
+      //       width: 25,
+      //     ),
+      //   ],
+      // ),
       body: isLoading ? loading() : body(_saveForm, context),
     ));
   }
@@ -104,128 +110,158 @@ class _SignUpPageState extends State<SignUpPage> {
   Form body(void _saveForm(BuildContext contet), BuildContext context) {
     return Form(
       key: _form,
-      child: ListView(children: [
-        Container(
-          padding: EdgeInsets.only(left: 26, right: 26, top: 4),
-          child: Column(
-            children: [
-              Inputfield(
-                text: 'Enter Name',
-                icon: Icon(Icons.person),
-                controller: nameCoun,
-                isEmail: false,
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Inputfield(
-                text: 'Enter Email Id',
-                icon: Icon(Icons.email),
-                controller: emailCount,
-                value: emailCount.text,
-                isEmail: true,
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Inputfield(
-                isEmail: false,
-                keyboardType: TextInputType.phone,
-                text: 'Enter Phone Number',
-                icon: Icon(Icons.phone),
-                controller: phoneCount,
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Inputfield(
-                isEmail: false,
-                text: 'Unit/Street Name',
-                icon: Icon(Icons.home),
-                controller: unitCount,
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Row(
+      child: Stack(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height,
+            child: Image(
+                // color: Colors.blue,
+                // height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                fit: BoxFit.cover,
+                image: AssetImage('assets/a.jpg')),
+          ),
+          ListView(children: [
+            Container(
+              padding: EdgeInsets.only(left: 40, right: 40, top: 4),
+              child: Column(
                 children: [
-                  Expanded(
-                      child: Inputfield(
-                          isEmail: false,
-                          icon: Icon(Icons.calculate),
-                          controller: suburbCount,
-                          text: 'Suburb')),
                   SizedBox(
-                    width: 16.0,
+                    height: MediaQuery.of(context).size.height * .03,
                   ),
-                  Expanded(
-                      child: Inputfield(
-                          keyboardType: TextInputType.number,
-                          isEmail: false,
-                          icon: Icon(Icons.calculate),
-                          controller: pinCount,
-                          text: 'Pin')),
+                  login(context),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .03,
+                  ),
+                  Inputfield(
+                    text: 'Enter Name',
+                    icon: Icon(Icons.person),
+                    controller: nameCoun,
+                    isEmail: false,
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .03,
+                  ),
+                  Inputfield(
+                    text: 'Enter Email Id',
+                    icon: Icon(Icons.email),
+                    controller: emailCount,
+                    value: emailCount.text,
+                    isEmail: true,
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .03,
+                  ),
+                  Inputfield(
+                    isEmail: false,
+                    keyboardType: TextInputType.phone,
+                    text: 'Enter Phone Number',
+                    icon: Icon(Icons.phone),
+                    controller: phoneCount,
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .03,
+                  ),
+                  Inputfield(
+                    isEmail: false,
+                    text: 'Unit/Street Name',
+                    icon: Icon(Icons.home),
+                    controller: unitCount,
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .03,
+                  ),
+
+                  Inputfield(
+                      isEmail: false,
+                      icon: Icon(Icons.place),
+                      controller: suburbCount,
+                      text: 'Suburb'),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .03,
+                  ),
+                  Inputfield(
+                      keyboardType: TextInputType.number,
+                      isEmail: false,
+                      icon: Icon(Icons.pin),
+                      controller: pinCount,
+                      text: 'Pin'),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .03,
+                  ),
+
+                  Inputfield(
+                    isEmail: false,
+                    icon: Icon(Icons.maps_home_work_sharp),
+                    text: 'State',
+                    controller: stateCount,
+                  ),
+
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .03,
+                  ),
+                  // Inputfield(
+                  //   isEmail: false,
+                  //   icon: Icon(Icons.location_on),
+                  //   text: 'Pickup Location',
+                  //   controller: pickupCount,
+                  // ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .03,
+                  ),
                 ],
               ),
-              SizedBox(
-                height: 16.0,
+            ),
+            Container(
+              padding: EdgeInsets.only(
+                left: 15,
+                right: 15,
               ),
-              Container(
-                padding: EdgeInsets.only(right: 160.0),
-                child: Inputfield(
-                  isEmail: false,
-                  icon: Icon(Icons.maps_home_work_sharp),
-                  text: 'State',
-                  controller: stateCount,
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Inputfield(
-                isEmail: false,
-                icon: Icon(Icons.location_on),
-                text: 'Pickup Location',
-                controller: pickupCount,
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-            ],
-          ),
-        ),
-        appButton(
-            function: () {
-              _saveForm(context);
-            },
-
-            // Navigator.push(context,
-            //     MaterialPageRoute(builder: (context) => HomePageOption())
-
-            // ),
-            name: "Login"),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 26.0, vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              InkWell(
-                  onTap: () {
-                    // Navigator.pushReplacement(context,
-                    //     MaterialPageRoute(builder: (context) => LoginScreen()));
-                    Navigator.pop(context);
+              height: 45,
+              child: appButtonBlack(
+                  function: () {
+                    _saveForm(context);
                   },
-                  child: Text(
-                    'Have a account?   Login',
-                    style: TextStyle(
-                      color: Colors.blueAccent,
-                    ),
-                  )),
-            ],
-          ),
-        ),
-      ]),
+
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (context) => HomePageOption())
+
+                  // ),
+                  name: "Signup",
+                  context: context),
+            ),
+          ]),
+        ],
+      ),
     );
+  }
+
+  Padding login(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 6.0),
+        child: Align(
+          alignment: Alignment.topRight,
+          child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width * .18,
+                height: MediaQuery.of(context).size.height * .05,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  color: Colors.black,
+                ),
+                child: Center(
+                  child: Text(
+                    'Login',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              )),
+        ));
   }
 }
 
@@ -249,7 +285,7 @@ class Inputfield extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // height: 55,
+      height: MediaQuery.of(context).size.height * .06,
       child: TextFormField(
         onChanged: onChangedFuntion,
         keyboardType: keyboardType,
@@ -278,7 +314,7 @@ class Inputfield extends StatelessWidget {
             hintText: text,
             contentPadding: EdgeInsets.symmetric(
               horizontal: 24.0,
-              vertical: 10.0,
+              // vertical: 10.0,
             )),
       ),
     );

@@ -21,8 +21,11 @@ dependencies:
   flutter_stripe: ^1.2.0
   
   badges: ^2.0.1
+  
   shared_preferences: ^2.0.7
+
   flutter_secure_storage: ^4.2.1
+
   motion_toast: ^1.4.0
   intl:
   progress_dialog: ^1.2.4

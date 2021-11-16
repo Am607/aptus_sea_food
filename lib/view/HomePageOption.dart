@@ -75,6 +75,7 @@ class _HomePageOptionState extends State<HomePageOption> {
                         print(db);
                         dbx.clear();
                         print(dbx);
+                        dbxId.clear();
                       }
 
                       int();
@@ -98,6 +99,7 @@ class _HomePageOptionState extends State<HomePageOption> {
                         print(db);
                         dbx.clear();
                         print(dbx);
+                        dbxId.clear();
                       }
 
                       int();

@@ -108,6 +108,7 @@ class RsetAPi {
     for (int i = 0; i < dbx.length; i++) {
       body.addAll({'orderitems[$i][price]': "${dbx[i]?.price}"});
       body.addAll({'orderitems[$i][id]': "${dbx[i]?.id}"});
+       body.addAll({'orderitems[$i][quantity]': "${dbx[i]?.quantity}"});
     }
 
     for (int i = 0; i < dbx.length; i++) {
@@ -153,6 +154,7 @@ class RsetAPi {
      required String abnNo,
     required String companyName,
     required String date,
+    required String payLater,
   }) async {
     print('Bulk order fuction called');
 
@@ -172,6 +174,7 @@ class RsetAPi {
       'abn_number': abnNo,
       'company_name': companyName,
       'date': date,
+      'pay_later':payLater
     };
 
     for (int i = 0; i < db.length; i++) {
@@ -185,15 +188,7 @@ class RsetAPi {
       body.addAll({'orderitems[$i][quantity]': "${db[i].keys.first}"});
     }
 
-    // var body2;
-
-    // for (int i = 0; 1 < 3; i++) {
-    //   body2 = {
-    //     'orderitems[$i][id]': "${dataa.id}",
-    //   };
-    // }
-
-    // final body3 = {...body, ...body2};
+   
     final response = await client.post(Uri.parse('$baseurl$endPont'),
         body: body, headers: header);
     print(response.body);

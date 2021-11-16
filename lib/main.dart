@@ -7,7 +7,7 @@ void main() async {
 
   // set the publishable key for Stripe - this is mandatory
   Stripe.publishableKey =
-      'pk_test_51JfPscSJq6xO3Mt6uViE2n4zhx5ADWcPOtklEsa0NYyHqvG3srn4n8S6OpEAawPguWHamXTZiI6o2bAvsw9Hlrwu00aXjMcxjI';
+      'pk_test_51JZlPfBwHjZQ9ZBhCGd0DAqmgHMbaOhJxx8pXWspOUmkXtqflnyzjFPKkbh7xhAvRxBhKGvKqjW0UxvtmojsSIlH00Per1m0yf';
 
   runApp(MyApp());
 }

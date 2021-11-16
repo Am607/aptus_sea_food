@@ -30,12 +30,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //   super.dispose();
   // }
-
+  bool validate = true;
   @override
   Widget build(BuildContext context) {
     save() {
       final isValid = _formKey1.currentState?.validate();
       if (isValid!) {
+        validate = true;
         setState(() {
           isLoading = true;
         });
@@ -59,12 +60,16 @@ class _LoginScreenState extends State<LoginScreen> {
           } else {
             setState(() {
               isLoading = false;
+              validate = true;
             });
 
             toast('Please enter valid email or password');
           }
         });
       }
+      setState(() {
+        validate = false;
+      });
       return;
     }
 
@@ -115,13 +120,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 //   ),
                 // ),
                 Positioned(
-                  left: MediaQuery.of(context).size.width * .15,
+                  left: MediaQuery.of(context).size.width * .105,
                   top: MediaQuery.of(context).size.height * .2,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(60),
                     child: Container(
-                      height: 80,
-                      width: 80,
+                      height: 100,
+                      width: 100,
                       child: Image(
                         image: AssetImage(appIocon1),
                       ),
@@ -129,22 +134,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 Positioned(
-                  left: MediaQuery.of(context).size.width * .4,
-                  top: MediaQuery.of(context).size.height * .225,
+                  left: MediaQuery.of(context).size.width * .39,
+                  top: MediaQuery.of(context).size.height * .24,
                   child: Column(
                     children: [
                       Stack(
                         children: [
-                          // Text(
-                          //   'MELBOURNE SEAFOOD',
-                          //   style: TextStyle(
-                          //       fontWeight: FontWeight.w600,
-                          //       foreground: Paint()
-                          //         ..style = PaintingStyle.stroke
-                          //         ..strokeWidth = 3
-                          //         ..color = Colors.white,
-                          //       fontSize: 18),
-                          // ),
                           Row(
                             children: [
                               Text(
@@ -152,14 +147,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 18),
+                                    fontSize: 16),
                               ),
                               Text(
                                 ' SEAFOOD',
                                 style: TextStyle(
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 20),
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16),
                               ),
                             ],
                           ),
@@ -167,22 +162,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       Stack(
                         children: [
-                          // Text(
-                          //   'Specialist Since 1969',
-                          //   style: TextStyle(
-                          //       fontWeight: FontWeight.w600,
-                          //       foreground: Paint()
-                          //         ..style = PaintingStyle.stroke
-                          //         ..strokeWidth = 3
-                          //         ..color = Colors.white,
-                          //       fontSize: 17),
-                          // ),
                           Text(
                             'Specialist Since 1969',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500,
-                                fontSize: 17),
+                                fontSize: 16),
                           ),
                         ],
                       ),
@@ -191,36 +176,46 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
 
                 Positioned(
-                  left: MediaQuery.of(context).size.width * .05,
+                  left: 0,
+                  right: 0,
                   top: MediaQuery.of(context).size.height * .47,
-                  child: Center(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * .9,
-                      height: MediaQuery.of(context).size.height * .067,
-                      child: Center(
-                        child: textField(
-                          controller: userNameController,
-                          ispassworrd: false,
-                          name: 'User Name',
-                          prefIcon: Icon(Icons.person),
-                        ),
+                  child: Container(
+                    margin: EdgeInsets.only(left: 40, right: 40),
+                    // width: MediaQuery.of(context).size.width * .9,
+                    height: validate
+                        ? MediaQuery.of(context).size.height * .05
+                        : MediaQuery.of(context).size.height * .08,
+                    child: textField(
+                      controller: userNameController,
+                      ispassworrd: false,
+                      name: 'User Name',
+                      prefIcon: Icon(
+                        Icons.person,
+                        color: Colors.grey,
+                        size: 16,
                       ),
                     ),
                   ),
                 ),
 
                 Positioned(
-                  left: MediaQuery.of(context).size.width * .05,
+                  left: 0,
+                  right: 0,
                   top: MediaQuery.of(context).size.height * .57,
-                  child: Center(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * .9,
-                      height: MediaQuery.of(context).size.height * .067,
-                      child: textField(
-                        controller: passwordController,
-                        ispassworrd: true,
-                        name: 'Password',
-                        prefIcon: Icon(Icons.lock),
+                  child: Container(
+                    margin: EdgeInsets.only(left: 40, right: 40),
+                    width: MediaQuery.of(context).size.width * .9,
+                    height: validate
+                        ? MediaQuery.of(context).size.height * .05
+                        : MediaQuery.of(context).size.height * .08,
+                    child: textField(
+                      controller: passwordController,
+                      ispassworrd: true,
+                      name: 'Password',
+                      prefIcon: Icon(
+                        Icons.lock,
+                        color: Colors.grey,
+                        size: 16,
                       ),
                     ),
                   ),
@@ -231,9 +226,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   left: 0,
                   right: 0,
                   child: Container(
-                    padding: EdgeInsets.only(left: 18, right: 18),
-                    height: 42,
-                    child: appButtonBlack(
+                    padding: EdgeInsets.only(left: 16, right: 16),
+                    height: 40,
+                    child: appButtonBlacka(
                         context: context,
                         function: () {
                           save();
@@ -344,46 +339,75 @@ class _LoginScreenState extends State<LoginScreen> {
     required Icon prefIcon,
     String? isOk,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 25, right: 25, top: 2),
-      child: Container(
-        // height: MediaQuery.of(context).size.height * .02,
-        child: Center(
-          child: TextFormField(
-            textAlign: TextAlign.start,
-            obscureText: ispassworrd ? !_passwordVisible : false,
-            controller: controller,
-            validator: (isOk) {
-              if (isOk!.isEmpty) {
-                return 'This field is required';
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Color(0xFFF0F1F2),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(width: 0, style: BorderStyle.none)),
-              prefixIcon: prefIcon,
-              hintText: name,
-              hintStyle: regularheading,
-              suffixIcon: ispassworrd
-                  ? IconButton(
-                      icon: Icon(
-                        _passwordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _passwordVisible = !_passwordVisible;
-                        });
-                      },
-                    )
-                  : null,
-              contentPadding: EdgeInsets.all(0),
-            ),
+    return Container(
+      // height: MediaQuery.of(context).size.height * .05,
+      // width: MediaQuery.of(context).size.width,
+      child: Center(
+        child: TextFormField(
+          // textAlignVertical: TextAlignVertical.center,
+          onTap: () {
+            setState(() {});
+          },
+          // textAlign: TextAlign.center,
+          obscureText: ispassworrd ? !_passwordVisible : false,
+          controller: controller,
+          validator: (isOk) {
+            if (isOk!.isEmpty) {
+              return 'This field is required';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            // isCollapsed: true, //! for icon
+            errorStyle: TextStyle(fontSize: 12),
+            filled: true,
+            // fillColor: Color(0xFFF0F1F2),
+            focusedBorder: OutlineInputBorder(
+                gapPadding: 20,
+                borderRadius: BorderRadius.circular(1),
+                borderSide: BorderSide(
+                    width: 2, style: BorderStyle.solid, color: Colors.grey)),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(1),
+                borderSide: BorderSide(
+                    width: 2, style: BorderStyle.solid, color: Colors.grey)),
+            errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(1),
+                borderSide: BorderSide(
+                    width: 2, style: BorderStyle.solid, color: Colors.grey)),
+            disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(1),
+                borderSide: BorderSide(
+                    width: 2, style: BorderStyle.solid, color: Colors.grey)),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(1),
+                borderSide: BorderSide(
+                    width: 2, style: BorderStyle.solid, color: Colors.grey)),
+            prefixIcon: prefIcon,
+
+            hintText: name,
+            hintStyle: regularheading,
+
+            // suffixIcon: ispassworrd
+            //     ? IconButton(
+            //         icon: Icon(
+            //           _passwordVisible
+            //               ? Icons.visibility
+            //               : Icons.visibility_off,
+            //         ),
+            //         onPressed: () {
+            //           setState(() {
+            //             _passwordVisible = !_passwordVisible;
+            //           });
+            //         },
+            //       )
+            //     : null,
+            contentPadding: EdgeInsets.all(9),
+
+            focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(1),
+                borderSide: BorderSide(
+                    width: 2, style: BorderStyle.solid, color: Colors.grey)),
           ),
         ),
       ),

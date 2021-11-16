@@ -80,6 +80,57 @@ InkWell appButtonBlack(
   );
 }
 
+InkWell appButtonBlackc(
+    {required void Function() function,
+    required String name,
+    required BuildContext context}) {
+  return InkWell(
+    onTap: function,
+    child: Container(
+      height: 48,
+    
+      // margin: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.0),
+          color: Colors.black,
+          border: Border.all(color: Colors.white)),
+
+      child: Center(
+          child: Text(
+        name,
+        style: TextStyle(color: Colors.white, fontSize: 18),
+      )),
+    ),
+  );
+}
+
+InkWell appButtonBlacka(
+    {required void Function() function,
+    required String name,
+    required BuildContext context}) {
+  return InkWell(
+    onTap: function,
+    child: Padding(
+      padding: EdgeInsets.only(left: 25, right: 25, bottom: 2, top: 2),
+      child: Container(
+        height: 48,
+        width: MediaQuery.of(context).size.width * .76,
+        // margin: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(1.0),
+            color: Colors.black,
+            ),
+
+        child: Center(
+            child: Text(
+          name,
+          style: TextStyle(color: Colors.white, fontSize: 18),
+        )),
+      ),
+    ),
+  );
+}
+
 InkWell appButtonTwo(
     {required void Function() function, required String name}) {
   return InkWell(
@@ -185,6 +236,16 @@ toast(String text) {
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
       backgroundColor: Colors.black,
+      textColor: Colors.white,
+      fontSize: 16.0);
+}
+toastRed(String text) {
+  return Fluttertoast.showToast(
+      msg: "$text",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
       textColor: Colors.white,
       fontSize: 16.0);
 }

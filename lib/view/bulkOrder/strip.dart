@@ -30,6 +30,7 @@ class StripPage extends StatefulWidget {
 }
 
 class _StripPageState extends State<StripPage> {
+
   // Map<String, dynamic>? paymentIntentData;
   late Strip? data;
 
@@ -47,24 +48,16 @@ class _StripPageState extends State<StripPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        primary: Colors.black,
-      ),
-      child: Text(
-        "Pay",
-        style: GoogleFonts.lato(
-            textStyle: TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        )),
-      ),
-      onPressed: () {
+    return appButtonBlackc(
+    context: context,
+    name: 'Pay',
+   
+      function:  () {
         makePayemnt();
       },
     );
   }
+  
 
   Future<void> makePayemnt() async {
     // final url =
@@ -82,8 +75,8 @@ class _StripPageState extends State<StripPage> {
       googlePay: true,
       style: ThemeMode.light,
       merchantCountryCode: 'AU',
+      customerId: '${data?.data?.customer}',
       merchantDisplayName: 'Aptus SeaFood',
-
     ));
     setState(() {});
     displayPaymentSheet();
@@ -93,11 +86,11 @@ class _StripPageState extends State<StripPage> {
     print('called');
     try {
       await Stripe.instance.presentPaymentSheet(
-          parameters: PresentPaymentSheetParameters(
-
-        clientSecret: '${data?.data?.clientSecret}',
-        confirmPayment: true,
-      ));
+          //     parameters: PresentPaymentSheetParameters(
+          //   clientSecret: '${data?.data?.clientSecret}',
+          //   confirmPayment: true,
+          // )
+          );
       setState(() {});
       // ScaffoldMessenger.of(context)
       //     .showSnackBar(SnackBar(content: Text('Payment Success')));
@@ -105,6 +98,7 @@ class _StripPageState extends State<StripPage> {
       RsetAPi restApi = RsetAPi();
       restApi
           .bulkOrder(
+            payLater: '0',
             abnNo: '${widget.abnNo}',
             companyName: '${widget.companyNo}',
             date: '${widget.date}',

@@ -3,7 +3,9 @@ import 'package:aptusseafood/Controller/restApi.dart';
 import 'package:aptusseafood/model/productModel.dart';
 import 'package:aptusseafood/view/details.dart';
 import 'package:aptusseafood/view/signUp.dart';
+import 'package:aptusseafood/view/xmasCartPage.dart';
 import 'package:aptusseafood/widgets/CommonWidgets.dart';
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -27,11 +29,23 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
   final TextEditingController timeSloteController = TextEditingController();
+  TextEditingController textController = TextEditingController();
   late Future<Product> products;
+
+  //! for search in product list
+  List<Datuma>? productsList;
+  List<Datuma>? newDataList;
+
+//! for qty button
+  List<int> qtyList = [];
+  void addQty() {
+    qtyList.add(1);
+  }
 
   //! multy selection
   String isSelectedId = "";
   List<bool> list = [];
+
   void isAdded({bool isAdded = false}) {
     list.add(isAdded);
   }
@@ -49,7 +63,20 @@ class _ProductPageState extends State<ProductPage> {
   @override
   void initState() {
     super.initState();
+    i();
     inta();
+    newDataList = productsList;
+  }
+
+  i() async {
+    await RsetAPi().getProducts(widget.index).then((value) {
+      setState(() {
+        productsList = value.data;
+        newDataList = value.data;
+      });
+
+      return value;
+    });
   }
 
   inta() {
@@ -67,22 +94,59 @@ class _ProductPageState extends State<ProductPage> {
         //! for multi selection
         for (int i = 0; i < int.parse('${value.data?.length}'); i++) {
           isAdded(isAdded: false);
+          addQty();
         }
       }
       return value;
     });
   }
 
+  onItemChanged(String value) {
+    setState(() {
+      newDataList = productsList
+          ?.where((item) => item.productName!.toLowerCase().contains(value))
+          .toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    print('time slote => ${widget.timeSlote}');
-    print(list);
+    // print('time slote => ${widget.timeSlote}');
+    // print(list);
+    print(newDataList);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         // backgroundColor: Colors.white,
         appBar: AppBar(
           centerTitle: true,
+          actions: [
+            widget.index == '3'
+                ? Container(
+                    padding: EdgeInsets.only(top: 10, right: 10),
+                    child: Badge(
+                      badgeColor: Colors.blue,
+                      shape: BadgeShape.circle,
+                      toAnimate: false,
+                      badgeContent: Text('${dbx.length}',
+                          style: TextStyle(color: Colors.white)),
+                      child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => XmaxCartPage(),
+                              ),
+                            );
+                          },
+                          child: Icon(Icons.shopping_cart)),
+                    ),
+                  )
+                : SizedBox(),
+            SizedBox(
+              width: 10,
+            ),
+          ],
           iconTheme: IconThemeData(color: Colors.white),
           elevation: 0,
           backgroundColor: Colors.black,
@@ -91,18 +155,53 @@ class _ProductPageState extends State<ProductPage> {
             style: TextStyle(color: Colors.white),
           ),
         ),
-        body: FutureBuilder<Product>(
-          future: products,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            final data = snapshot.data;
-            // print('the product name is ${data?.data?[0].productName}');
-            return body(context, product: data);
-          },
+        body: ListView(
+          children: [
+            widget.index == '3'
+                ? Container(
+                    margin: EdgeInsets.only(left: 16, right: 16, top: 16),
+                    height: MediaQuery.of(context).size.height * .05,
+                    //  width: MediaQuery.of(context).size.width * .8,
+                    child: TextField(
+                      onChanged: (value) {
+                        onItemChanged(value);
+                      },
+                      decoration: InputDecoration(
+                          isDense: true,
+                          hintText: 'Search',
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: -8),
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: .5),
+                              borderRadius: BorderRadius.circular(8))),
+                    ))
+                : SizedBox(height: 0),
+            FutureBuilder<Product>(
+              future: products,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  if (snapshot.hasData) {
+                    final data = snapshot.data;
+                    //TODO: important to fix;
+                    // productsList = snapshot.data?.data;
+                    // newDataList = snapshot.data?.data;
+                    return body(context, product: data);
+                  }
+                }
+                // final List<Datuma>? products = data?.data;
+                // print('the product name is ${data?.data?[0].productName}');
+                return Center(
+                  child: Text('No Data'),
+                );
+              },
+            ),
+          ],
         ),
         bottomNavigationBar: navigationBar(
             context: context,
@@ -130,8 +229,11 @@ class _ProductPageState extends State<ProductPage> {
   body(BuildContext context, {Product? product}) {
     print(dbx);
     return product?.data?.length.toString() == '0'
-        ? Center(
-            child: Text('No Product Found'),
+        ? Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Text('No Product Found'),
+            ),
           )
         : SingleChildScrollView(
             physics: ScrollPhysics(),
@@ -140,199 +242,77 @@ class _ProductPageState extends State<ProductPage> {
                 SizedBox(
                   height: 1,
                 ),
-                // Container(
-                //   height: 130,
-                //   decoration: BoxDecoration(
-                //       image: DecorationImage(
-                //           image: AssetImage(seafood), fit: BoxFit.cover)),
-                // ),
-                // Center(
-                //   child: Padding(
-                //     padding: const EdgeInsets.only(top: 30),
-                //     child: Text(
-                //       "${widget.planName} Plan",
-                //       style: TextStyle(
-                //           color: Colors.black,
-                //           fontSize: 18,
-                //           fontWeight: FontWeight.bold),
-                //     ),
-                //   ),
-                // ),
-                // Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                // children: [
-                //   Container(
-                //       height: MediaQuery.of(context).size.height * .069,
-                //       width: MediaQuery.of(context).size.width * .78,
-                //       // width: MediaQuery.of(context).size.width * .85,
-                //       margin:
-                //           EdgeInsets.only(left: 20, top: 10, bottom: 10),
-                //       padding: EdgeInsets.only(left: 20, right: 10),
-                //       decoration: BoxDecoration(
-                //           borderRadius: BorderRadius.circular(12),
-                //           color: Colors.white,
-                //           border: Border.all(color: Colors.black)),
-                //       child: DropdownButtonHideUnderline(
-                //         child: DropdownButton<String>(
-                //           iconSize: 30,
-                //           items: plans.map(buildmenuItem).toList(),
-                //           icon: Icon(
-                //             Icons.arrow_drop_down,
-                //             color: Colors.black,
-                //           ),
-                //           value: valuea == null ? plans[0] : valuea,
-                //           onChanged: (value) => setState(() {
-                //             this.valuea = value;
-
-                //             valuea == 'choose a special product'
-                //                 ? print('Somthing')
-                //                 : this.dataDby = dat?.singleWhere(
-                //                     (element) =>
-                //                         //! dont edit space sencitive //! dont edit
-                //                         '${element.productName}     ${element.price}' ==
-                //                         value);
-                //             print(value);
-                //             print(dataDby?.price);
-                //           }),
-                //         ),
-                //       )),
-
-                //   Container(
-                //     height: 35,
-                //     width: 35,
-                //     child: FloatingActionButton(
-                //       backgroundColor: Colors.black,
-                //       onPressed: () {
-                //         if (dataDby == null) {
-                //           toast('Please Choose a Special Product');
-                //         } else {
-                //           dby.add(dataDby);
-                //           toast('${dataDby?.productName} is added');
-                //         }
-                //       },
-                //       child: Icon(
-                //         Icons.add,
-                //         color: Colors.white,
-                //       ),
-                //     ),
-                //   ),
-                //   SizedBox(
-                //     width: 3,
-                //   )
-                //   // Container(
-                //   //     height: MediaQuery.of(context).size.height * .083,
-                //   //     width: MediaQuery.of(context).size.width * .225,
-                //   //     child: appButton(function: () {}, name: 'Add'))
-                // ]),
                 ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     // padding:
                     //     EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 0),
-                    itemCount: product?.data?.length,
+                    itemCount: newDataList?.length,
                     itemBuilder: (context, i) {
-                      String? name = product?.data?[i].productName;
-                      double price = double.parse('${product?.data?[i].price}');
+                      String? name = newDataList?[i].productName;
+                      double price = double.parse('${newDataList?[i].price}');
+                      bool isAdded = false;
 
                       return item(
                           index: i,
                           name: name == null ? 'No name' : name,
                           price: price,
-                          id: '${product?.data?[i].id}',
-                          function: () {
-                            setState(() {
-                              list[i] = !list[i];
+                          id: '${newDataList?[i].id}',
+                          function: widget.index == '3'
+                              ? () {
+                                  late int a = 0;
+                                  for (int b = 0;
+                                      b < product!.data!.length;
+                                      b++) {
+                                    setState(() {
+                                      if ('${newDataList?[i].id}' ==
+                                          '${product.data?[b].id}') {
+                                        a = b;
+                                      }
+                                    });
+                                  }
 
-                              if (list[i] == true) {
-                                dbx.add(product?.data?[i]);
-                              } else if (list[i] == false) {
-                                print('this one is called');
+                                  setState(() {
+                                    list[a] = !list[a];
+                                    product.data?[a].price =
+                                        '${price * qtyList[i]}';
+                                    product.data?[a].quantity = '${qtyList[i]}';
 
-                                dbx.removeWhere((element) =>
-                                    element?.id == product?.data?[i].id);
-                              }
-                              data = product?.data?[i];
+                                    if (list[a] == true) {
+                                      dbx.add(product.data?[a]);
+                                      dbxId.add('${product.data?[a].id}');
+                                    } else if (list[a] == false) {
+                                      dbx.removeWhere((element) =>
+                                          element?.id == product.data?[a].id);
+                                      dbxId.remove('${product.data?[a].id}');
+                                    }
+                                    data = product.data?[a];
 
-                              isSelectedId = '${product?.data?[i].id}';
-                              selectdIndex = i;
-                            });
-                          });
+                                    isSelectedId = '${product.data?[a].id}';
+                                    selectdIndex = a;
+                                  });
+                                }
+                              : () {
+                                  setState(() {
+                                    list[i] = !list[i];
+
+                                    if (list[i] == true) {
+                                      dbx.add(product?.data?[i]);
+                                    } else if (list[i] == false) {
+                                      dbx.removeWhere((element) =>
+                                          element?.id == product?.data?[i].id);
+                                    }
+                                    data = product?.data?[i];
+
+                                    isSelectedId = '${product?.data?[i].id}';
+                                    selectdIndex = i;
+                                  });
+                                });
                     }),
               ],
             ),
           );
   }
-
-  //   itema(
-  //     {required String name,
-  //     required double price,
-  //     required String id,
-  //     required Datum? data,
-  //     required void Function() function}) {
-  //   return InkWell(
-  //     onTap: function,
-  //     child: Container(
-  //       height: MediaQuery.of(context).size.height * .12,
-  //       margin: EdgeInsets.only(top: 5),
-  //       padding: EdgeInsets.zero,
-
-  //       child: Center(
-  //         child: ListTile(
-  //           title: Text(
-  //             '$name',
-  //             style: TextStyle(
-  //               fontSize: 15,
-  //               color: isSelected == id ? Colors.white : Colors.black,
-  //             ),
-  //           ),
-  //           subtitle: Text(
-  //             '${data?.availableQuantity} ${data?.unit}',
-  //             style: TextStyle(
-  //               fontSize: 15,
-  //               color: isSelected == id ? Colors.white : Colors.black,
-  //             ),
-  //           ),
-  //           trailing: Text(
-  //             '\$$price',
-  //             style: TextStyle(
-  //               fontSize: 15,
-  //               color: isSelected == id ? Colors.white : Colors.black,
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-
-  //       // child: Row(
-  //       //   children: [
-  //       //     Container(
-  //       //       height: 20,
-  //       //       child: ListTile(
-  //       //         title: Text(
-  //       //           '$name',
-  //       //           style: TextStyle(fontSize: 17),
-  //       //         ),
-  //       //       ),
-  //       //     ),
-
-  //       //     SizedBox(
-  //       //       width: 8,
-  //       //     ),
-
-  //       //     Expanded(
-  //       //       child: Text(
-  //       //         '${data?.availableQuantity}/\$$price ${data?.unit}',
-  //       //         style: TextStyle(fontSize: 17),
-  //       //       ),
-  //       //     )
-  //       //   ],
-  //       // ),
-
-  //       decoration: BoxDecoration(
-  //         color: isSelected == id ? Colors.black : Colors.white,
-  //       ),
-  //     ),
-  //   );
-  // }
 
   item(
       {required int index,
@@ -341,7 +321,7 @@ class _ProductPageState extends State<ProductPage> {
       required String id,
       required void Function() function}) {
     return InkWell(
-      onTap: function,
+      onTap: widget.index == '3' ? null : function,
       child: Container(
         height: MediaQuery.of(context).size.height * .12,
         padding: EdgeInsets.zero,
@@ -360,20 +340,100 @@ class _ProductPageState extends State<ProductPage> {
               '$name',
               style: TextStyle(
                 fontSize: 15,
-                color: list[index] == true ? Colors.white : Colors.black,
+                color: dbxId.contains(id) == true ? Colors.white : Colors.black,
               ),
             ),
             subtitle: Text(
-              '\$$price',
+              '\$${price * qtyList[index]}',
               style: TextStyle(
                 fontSize: 15,
-                color: list[index] == true ? Colors.white : Colors.black,
+                color: dbxId.contains(id) == true ? Colors.white : Colors.black,
               ),
             ),
+            trailing: widget.index == '3'
+                ? Container(
+                    width: MediaQuery.of(context).size.width * .3,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * .2,
+                          padding: EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Theme.of(context).accentColor),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              InkWell(
+                                  onTap: () {
+                                    if (dbxId.contains(id) == true) {
+                                      toastRed('Please Remove From CART');
+                                    } else {
+                                      if (qtyList[index] > 0) {
+                                        setState(() {
+                                          qtyList[index]--;
+                                        });
+                                      }
+                                    }
+                                  },
+                                  child: Icon(
+                                    Icons.remove,
+                                    color: Colors.white,
+                                    size: 16,
+                                  )),
+                              Container(
+                                margin: EdgeInsets.symmetric(horizontal: 3),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 3, vertical: 2),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(3),
+                                    color: Colors.white),
+                                child: Text(
+                                  '${qtyList[index]}',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 16),
+                                ),
+                              ),
+                              InkWell(
+                                  onTap: () {
+                                    if (dbxId.contains(id) == true) {
+                                      toastRed('Please Remove From CART');
+                                    } else {
+                                      qtyList[index]++;
+                                      setState(() {});
+                                    }
+                                  },
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                    size: 16,
+                                  )),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: InkWell(
+                              onTap: function,
+                              child: list[index] == true
+                                  ? Icon(
+                                      Icons.remove_shopping_cart,
+                                      color: Colors.white,
+                                    )
+                                  : Icon(
+                                      Icons.add_shopping_cart,
+                                      color: Colors.black,
+                                    )),
+                        ),
+                      ],
+                    ),
+                  )
+                : SizedBox(),
           ),
         ),
         decoration: BoxDecoration(
-          color: list[index] == true ? Colors.black : Colors.white,
+          color: dbxId.contains(id) == true ? Colors.black : Colors.white,
           // borderRadius: BorderRadius.circular(12)
         ),
       ),

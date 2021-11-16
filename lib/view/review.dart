@@ -117,6 +117,7 @@ class Review extends StatelessWidget {
 
         ListView.builder(
             shrinkWrap: true,
+            physics: ScrollPhysics(),
             itemCount: dbx.length,
             itemBuilder: (BuildContext ctxt, int index) {
               return rowWidget(
@@ -155,7 +156,7 @@ class Review extends StatelessWidget {
         rowWidget(name: 'Payment Mode', price: '${this.paymentMode}'),
         // rowWidget(name: 'Pick Up', price: '${this.date}'),
         rowWidget(name: 'Balance', price: '${this.remaingAmount}'),
-        rowWidget(name: 'Date of Delivery', price: '${this.date}'),
+        rowWidget(name: 'Date of Pickup', price: '${this.date}'),
         rowWidget(name: 'EFTPOS Receipt No', price: '${this.eftNo}'),
         // rowWidget(name: 'Location', price: '${userInfo.data!.pickUpLocation}'),
         rowWidget(name: 'Time slot', price: '${this.timesolte}'),

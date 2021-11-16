@@ -19,7 +19,7 @@ String indexA = '';
 
 class _PlanPageState extends State<PlanPage> {
   List<String> plans = ['Choose a Time Slot'];
-  List<String> dates = ['Choose a Delivery Date', "23-12-2021", "24-12-2021"];
+  List<String> dates = ['Choose a Date', "23-12-2021", "24-12-2021"];
   late Future<Plan> data;
 
   String? valuea;
@@ -51,7 +51,6 @@ class _PlanPageState extends State<PlanPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('buid widget id 320');
     print(valuea);
 
     return Scaffold(
@@ -64,8 +63,8 @@ class _PlanPageState extends State<PlanPage> {
               toast('Please Select One Plan');
             } else if (valuea == null || valuea == 'Choose a Time Slot') {
               toast('Please Select Time Slot');
-            } else if (valueb == null || valueb == 'Choose a Delivery Date') {
-              toast('Please Select a Delivery Date');
+            } else if (valueb == null || valueb == 'Choose a Date') {
+              toast('Please Select a Date');
             } else {
               int() {
                 print(db);
@@ -75,6 +74,7 @@ class _PlanPageState extends State<PlanPage> {
                 dby.clear();
                 print(dby);
                 print(dbx);
+                dbxId.clear();
               }
 
               int();

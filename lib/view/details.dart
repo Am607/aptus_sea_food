@@ -39,7 +39,8 @@ class _DetailsPageState extends State<DetailsPage> {
     for (int i = dbx.length; i < (dbx.length + dby.length); i++) {
       amount.add(double.parse("${dby[i - dbx.length]?.price}"));
     }
-    var pricea = amount.sum;
+    var pricea = double.parse(amount.sum.toStringAsFixed(2));
+    
     print(amount);
     print(pricea);
     return Scaffold(

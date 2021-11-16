@@ -48,7 +48,7 @@ class PrivilagePage extends StatelessWidget {
         SizedBox(height: 100),
         Center(
           child: Text(
-            'Thanks for choosing \n     AptusSea foods',
+            'Thanks for choosing \n     Aptus Sea Foods',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
           ),
         ),

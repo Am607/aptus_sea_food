@@ -1,4 +1,5 @@
 import 'package:aptusseafood/Controller/localdb.dart';
+import 'package:aptusseafood/view/bulkOrder/paymentPage.dart';
 
 import 'package:aptusseafood/view/bulkOrder/strip.dart';
 import 'package:aptusseafood/view/productPage.dart';
@@ -75,29 +76,23 @@ class DetailsPagea extends StatelessWidget {
         // rowWidget(name: 'Product1', price: '\$1000'),
         // rowWidget(name: 'Product2', price: '\$2000'),
 
-        bottomNavigationBar: navigationBara(
-          widget: StripPage(
-            abnNo: this.abnNo,
-            companyNo: this.companyNo,
-            date: this.date,
-            totalPrice: totalprice,
-            address: address,
-            modeoff: modeof,
-          ),
-          // next: () {
-          //   Navigator.pushReplacement(
-          //       context,
-          //       MaterialPageRoute(
-          //           builder: (context) => StripPage(
-          //                 abnNo: this.abnNo,
-          //                 companyNo: this.companyNo,
-          //                 date: this.date,
-          //                 totalPrice: totalprice,
-          //                 address: address,
-          //                 modeoff: modeof,
-          //               )));
-          // },
-          context: context,
+        bottomNavigationBar: navigationBar(
+          nextName: 'Next',
+        context: context,
+          next: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PaymentOptionPage(
+                          abnNo: this.abnNo,
+                          companyNo: this.companyNo,
+                          date: this.date,
+                          totalPrice: totalprice,
+                          address: address,
+                          modeoff: modeof,
+                        )));
+          },
+        
           back: () {
             Navigator.pop(context);
           },

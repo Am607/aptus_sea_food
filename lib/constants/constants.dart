@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 const regularheading = TextStyle(
-  fontSize: 18.0,
+  color: Colors.grey,
+  fontSize: 14.0,
 );
 
 const appIocon = "assets/splashicon.png";

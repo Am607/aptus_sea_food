@@ -254,3 +254,58 @@ toasta({required BuildContext context, required String msg}) =>
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text("$msg"),
     ));
+class InputfieldA extends StatelessWidget {
+  final String text;
+  final Icon? icon;
+  final TextInputType? keyboardType;
+  final TextEditingController? controller;
+  final String? value;
+  final bool isEmail;
+  final ValueChanged<String>? onChangedFuntion;
+  InputfieldA(
+      {this.icon,
+      required this.text,
+      this.keyboardType,
+      this.controller,
+      required this.isEmail,
+      this.onChangedFuntion,
+      this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * .06,
+      child: TextFormField(
+        onChanged: onChangedFuntion,
+        keyboardType: keyboardType,
+        controller: controller,
+        validator: isEmail
+            ? (text) {
+                if (!(text!.contains('@')) || text.isEmpty) {
+                  return 'Enter a valid email address';
+                }
+                return null;
+              }
+            : (tex) {
+                if (tex!.isEmpty) {
+                  return "Enter valid $text";
+                }
+                return null;
+              },
+        decoration: InputDecoration(
+            filled: true,
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6),
+                borderSide: BorderSide(width: .5, style: BorderStyle.solid,color: Colors.black)),
+           fillColor: Colors.white,
+            hintStyle: GoogleFonts.poppins(fontSize: 16.0),
+            prefixIcon: icon,
+            hintText: text,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 24.0,
+              // vertical: 10.0,
+            )),
+      ),
+    );
+  }
+}

@@ -1,5 +1,6 @@
 import 'package:aptusseafood/Controller/localdb.dart';
 import 'package:aptusseafood/view/bulkOrder/HomepageB.dart';
+import 'package:aptusseafood/view/homeDelivery/home.dart';
 import 'package:aptusseafood/view/logiinScreen.dart';
 import 'package:aptusseafood/view/planPage.dart';
 
@@ -117,7 +118,11 @@ class _HomePageOptionState extends State<HomePageOption> {
                 height: MediaQuery.of(context).size.height * .075,
                 child: appButtonBlack(
                     function: () {
-                      toast('Coming Soon');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeDeliveryPage()));
+                      // .then((value) => setState(() {}));
                     },
                     name: "Home Delivery",
                     context: context),

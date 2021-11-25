@@ -2,6 +2,8 @@ import 'package:aptusseafood/Controller/localdb.dart';
 import 'package:aptusseafood/constants/constants.dart';
 import 'package:aptusseafood/model/bulkOrderModel.dart';
 import 'package:aptusseafood/model/bulkProductModel.dart';
+import 'package:aptusseafood/model/homeDelivery/category.dart';
+import 'package:aptusseafood/model/homeDelivery/postal.dart';
 import 'package:aptusseafood/model/orderModel.dart';
 import 'package:aptusseafood/model/planModel.dart';
 import 'package:aptusseafood/model/privilageCardModel.dart';
@@ -84,7 +86,7 @@ class RsetAPi {
     // required String planid,
     required String paymentmethod,
     required String date,
-     required String eftNO,
+    required String eftNO,
     // required String name,
   }) async {
     print('order fuction called');
@@ -108,7 +110,7 @@ class RsetAPi {
     for (int i = 0; i < dbx.length; i++) {
       body.addAll({'orderitems[$i][price]': "${dbx[i]?.price}"});
       body.addAll({'orderitems[$i][id]': "${dbx[i]?.id}"});
-       body.addAll({'orderitems[$i][quantity]': "${dbx[i]?.quantity}"});
+      body.addAll({'orderitems[$i][quantity]': "${dbx[i]?.quantity}"});
     }
 
     for (int i = 0; i < dbx.length; i++) {
@@ -151,7 +153,7 @@ class RsetAPi {
     required String address,
     required String transactionid,
     required String amount,
-     required String abnNo,
+    required String abnNo,
     required String companyName,
     required String date,
     required String payLater,
@@ -174,7 +176,7 @@ class RsetAPi {
       'abn_number': abnNo,
       'company_name': companyName,
       'date': date,
-      'pay_later':payLater
+      'pay_later': payLater
     };
 
     for (int i = 0; i < db.length; i++) {
@@ -188,7 +190,6 @@ class RsetAPi {
       body.addAll({'orderitems[$i][quantity]': "${db[i].keys.first}"});
     }
 
-   
     final response = await client.post(Uri.parse('$baseurl$endPont'),
         body: body, headers: header);
     print(response.body);
@@ -212,6 +213,41 @@ class RsetAPi {
       // print(response.body);
       var joinString = response.body;
       return stripFromJson(joinString);
+    } else {
+      throw Exception('failed to load');
+    }
+  }
+
+  Future<Postal> postalCodeSearch(String postalcode) async {
+    print('post postal code called');
+    final endPoint = 'search-postal-code';
+    final qparams = {'code': postalcode};
+    String qString = Uri(queryParameters: qparams).query;
+    final response = await client.post(
+      Uri.parse('$baseurl$endPoint$qString'),
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      // print(response.body);
+      var joinString = response.body;
+      return postalFromJson(joinString);
+    } else {
+      throw Exception('failed to load');
+    }
+  }
+
+  Future<HomedeliveryCategry> hdCategory() async {
+    print('post category called');
+    final endPoint = 'get-categories';
+
+    final response = await client.get(
+      Uri.parse('$baseurl$endPoint'),
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      // print(response.body);
+      var joinString = response.body;
+      return homedeliveryCategryFromJson(joinString);
     } else {
       throw Exception('failed to load');
     }

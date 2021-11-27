@@ -103,30 +103,37 @@ class RsetAPi {
       'time_slot': timeslot,
       'date': date,
       'payment_method': paymentmethod,
-      'plan_id': dbx[0]?.planId,
+      'plan_id': dbx[0].values.first?.planId,
       'eftpos': eftNO,
     };
 
     for (int i = 0; i < dbx.length; i++) {
-      body.addAll({'orderitems[$i][price]': "${dbx[i]?.price}"});
-      body.addAll({'orderitems[$i][id]': "${dbx[i]?.id}"});
-      body.addAll({'orderitems[$i][quantity]': "${dbx[i]?.quantity}"});
+      double qty =
+          dbx[i].keys.first / double.parse('${dbx[i].values.first?.price}');
+      print('quantity of each prduct => ${qty.toInt()}');
+      body.addAll({'orderitems[$i][price]': "${dbx[i].keys.first.toString()}"});
+      body.addAll({'orderitems[$i][id]': "${dbx[i].values.first?.id}"});
+      body.addAll({'orderitems[$i][quantity]': "${qty.toInt()}"});
+      body.addAll(
+          {'orderitems[$i][name]': "${dbx[i].values.first?.productName}"});
     }
 
-    for (int i = 0; i < dbx.length; i++) {
-      body.addAll({'orderitems[$i][name]': "${dbx[i]?.productName}"});
-    }
+    // for (int i = 0; i < dbx.length; i++) {
+    //   body.addAll(
+    //       {'orderitems[$i][name]': "${dbx[i].values.first?.productName}"});
+    // }
+
     int z = dbx.length + dby.length;
     print(z);
-    for (int a = dbx.length; a < z; a++) {
-      body.addAll({'orderitems[$a][price]': "${dby[a - dbx.length]?.price}"});
-      body.addAll({'orderitems[$a][id]': "${dby[a - dbx.length]?.id}"});
-    }
+    // for (int a = dbx.length; a < z; a++) {
+    //   body.addAll({'orderitems[$a][price]': "${dby[a - dbx.length]?.price}"});
+    //   body.addAll({'orderitems[$a][id]': "${dby[a - dbx.length]?.id}"});
+    // }
 
-    for (int a = dbx.length; a < z; a++) {
-      body.addAll(
-          {'orderitems[$a][name]': "${dby[a - dbx.length]?.productName}"});
-    }
+    // for (int a = dbx.length; a < z; a++) {
+    //   body.addAll(
+    //       {'orderitems[$a][name]': "${dby[a - dbx.length]?.productName}"});
+    // }
 
     final response = await client.post(Uri.parse('$baseurl$endPont'),
         body: body, headers: header);

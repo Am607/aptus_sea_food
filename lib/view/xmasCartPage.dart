@@ -21,7 +21,7 @@ class XmaxCartPage extends StatelessWidget {
    ) :  ListView.builder(
         itemCount: dbx.length,
         itemBuilder: (context, index) {
-          return item(name: "${dbx[index]?.productName}", price:double.parse( dbx[index]!.price ), context: context, );
+          return item(name: "${dbx[index].values.first?.productName}", price:double.parse( dbx[index].keys.first.toString()), context: context, );
         },
       ),
     );

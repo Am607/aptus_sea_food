@@ -109,7 +109,7 @@ class Review extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 20.0, top: 4, bottom: 12),
           child: Text(
-            "Orderd Products",
+            "Ordered Products",
             style: TextStyle(
                 fontSize: 16, color: Colors.black, fontWeight: FontWeight.w800),
           ),
@@ -121,8 +121,8 @@ class Review extends StatelessWidget {
             itemCount: dbx.length,
             itemBuilder: (BuildContext ctxt, int index) {
               return rowWidget(
-                  name: '${dbx[index]?.productName}',
-                  price: '${dbx[index]?.price}');
+                  name: '${dbx[index].values.first?.productName}',
+                  price: '${dbx[index].keys.first.toString()}');
             }),
         Divider(
           thickness: 2,

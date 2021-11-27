@@ -34,7 +34,7 @@ class _DetailsPageState extends State<DetailsPage> {
   Widget build(BuildContext context) {
     List<double> amount = [];
     for (int i = 0; i < dbx.length; i++) {
-      amount.add(double.parse("${dbx[i]?.price}"));
+      amount.add(double.parse("${dbx[i].keys.first.toString()}"));
     }
     for (int i = dbx.length; i < (dbx.length + dby.length); i++) {
       amount.add(double.parse("${dby[i - dbx.length]?.price}"));
@@ -62,7 +62,7 @@ class _DetailsPageState extends State<DetailsPage> {
           rowWidgeta(name: 'Total', price: '\$$pricea'),
           rowWidgetTwo(name: 'Payment Mode'),
           rowWidgetFour(name: 'EFTPOS Receipt No'),
-          rowWidgetTree(name: 'Remain Amount'),
+          rowWidgetTree(name: 'Remaining Amount'),
         ],
       ),
       bottomNavigationBar: navigationBar(
@@ -72,7 +72,7 @@ class _DetailsPageState extends State<DetailsPage> {
             });
 
             if (priceController.text == '') {
-              toast('Please remaining amount');
+              toast('Please Remaining Amount');
             } else {
               Navigator.push(
                   context,

@@ -261,116 +261,82 @@ class _ProductPageState extends State<ProductPage> {
                       // print(pricei);
                       // return
                       // Text('${newDataList?[n].productName} $n');
-                      late int a = 0;
-                      for (int b = 0; b < product!.data!.length; b++) {
-                       
-                          if ('${newDataList?[n].id}' ==
-                              '${product?.data?[b].id}') {}
-                      
-
-                        WidgetsBinding.instance?.addPostFrameCallback((_) {
-                          a = b;
-                        });
-                      }
+                 
 
                       return item(
-                        data: newDataList?[n],
-                        // pricei: pricei,
-                        id: a,
-                        index: n,
-                        // name: name == null ? 'No name' : name,
-                        // pricef: pricef,
-                        // id: '${newDataList?[n].id}',
-                        function: widget.index == '3'
-                            ? () {
-                                // late int a = 0;
-                                // for (int b = 0;
-                                //     b < product!.data!.length;
-                                //     b++) {
-                                //   setState(() {
-                                //     if ('${newDataList?[i].id}' ==
-                                //         '${product.data?[b].id}') {
-                                //       a = b;
-                                //     }
-                                //   });
-                                // }
-
-                                setState(() {
-                                  list[a] = !list[a];
-
-                                  if (list[a] == true) {
-                                    // cardData?.data?[a].price =
-                                    //     '${pricei * qtyList[i]}';
-
-                                    cardData?.data?[a].quantity =
-                                        '${qtyList[i]}';
-
-                                    dbx.add(cardData?.data?[a]);
-                                    dbxId.add('${cardData?.data?[a].id}');
-                                  } else if (list[a] == false) {
+                          data: newDataList?[n],
+                          index: n,
+                          function: widget.index == '3'
+                              ? () {
+                                  late int a = 0;
+                                  for (int b = 0;
+                                      b < product!.data!.length;
+                                      b++) {
                                     setState(() {
-                                      // product.data?[a].price = '$pricei';
-                                      // qtyList[i] = 1;
+                                      if ('${newDataList?[n].id}' ==
+                                          '${product?.data?[b].id}') {
+                                        a = b;
+                                      }
                                     });
-
-                                    dbx.removeWhere((element) =>
-                                        element?.id == cardData?.data?[a].id);
-                                    dbxId.remove('${cardData?.data?[a].id}');
                                   }
-                                  data = product.data?[a];
 
-                                  isSelectedId = '${product.data?[a].id}';
-                                  selectdIndex = a;
+                                  setState(() {
+                                    list[a] = !list[a];
+                                  });
+                                  setState(() {
+                                    if (list[a] == true) {
+                                      Datuma? item = product?.data?[a];
+                                      double amount =
+                                          num.parse('${newDataList?[n].price}')
+                                                  .toDouble() *
+                                              qtyList[a];
+
+                                      dbx.add({amount: item});
+                                      dbxId.add('${product?.data?[a].id}');
+                                      print(dbxId);
+                                    } else {
+                                      dbx.removeWhere((element) =>
+                                          element.values.first?.id ==
+                                          product?.data?[n].id);
+                                      dbxId.remove('${product?.data?[a].id}');
+                                      print(dbxId);
+                                    }
+                                  });
+                                }
+                              : () {
+                                  // setState(() {
+                                  //   // list[i] = !list[i];
+
+                                  //   // if (list[i] == true) {
+                                  //   //   dbx.add(product?.data?[i]);
+                                  //   // } else if (list[i] == false) {
+                                  //   //   dbx.removeWhere((element) =>
+                                  //   //       element?.id == product?.data?[i].id);
+                                  //   // }
+                                  //   // data = product?.data?[i];
+
+                                  //   // isSelectedId = '${product?.data?[i].id}';
+                                  //   // selectdIndex = i;
+                                  // });
                                 });
-                              }
-                            : () {
-                                setState(() {
-                                  // list[i] = !list[i];
-
-                                  // if (list[i] == true) {
-                                  //   dbx.add(product?.data?[i]);
-                                  // } else if (list[i] == false) {
-                                  //   dbx.removeWhere((element) =>
-                                  //       element?.id == product?.data?[i].id);
-                                  // }
-                                  // data = product?.data?[i];
-
-                                  // isSelectedId = '${product?.data?[i].id}';
-                                  // selectdIndex = i;
-                                });
-                        }
-                      );
                     }),
               ],
             ),
           );
   }
 
-  item({
-    required int index,
-    required Datuma? data,
-    // required String name,
-    // required double pricei,
-    // required double pricef,
-   
-    required void Function() function
-  }) {
+  item(
+      {required int index,
+      required Datuma? data,
+      required void Function() function}) {
     return InkWell(
       onTap: widget.index == '3' ? null : () {},
       child: Container(
         height: MediaQuery.of(context).size.height * .12,
         padding: EdgeInsets.zero,
-        // padding: EdgeInsets.only(
-        //   left: 12,
-        // ),
         margin: EdgeInsets.only(top: 3),
         child: Center(
           child: ListTile(
-            // leading: CircleAvatar(
-            //   child: Text(
-            //     '$name'[0],
-            //   ),
-            // ),
             title: Text(
               '${data?.productName}',
               style: TextStyle(
@@ -407,25 +373,13 @@ class _ProductPageState extends State<ProductPage> {
                             children: [
                               InkWell(
                                   onTap: () {
-                                    late int a = 0;
-                                    for (int b = 0;
-                                        b < product!.data!.length;
-                                        b++) {
-                                      setState(() {
-                                        if ('${newDataList?[index].id}' ==
-                                            '${product?.data?[b].id}') {
-                                          a = b;
-                                        }
-                                      });
-                                    }
-
                                     if (dbxId.contains(data?.id.toString()) ==
                                         true) {
                                       toastRed('Please Remove From CART');
                                     } else {
-                                      if (qtyList[a] > 1) {
+                                      if (qtyList[index] > 1) {
                                         setState(() {
-                                          qtyList[a]--;
+                                          qtyList[index]--;
 
                                           // product.data?[index].price = pricei * qtyList[index];
                                         });
@@ -452,23 +406,11 @@ class _ProductPageState extends State<ProductPage> {
                               ),
                               InkWell(
                                   onTap: () {
-                                    late int a = 0;
-                                    for (int b = 0;
-                                        b < product!.data!.length;
-                                        b++) {
-                                      setState(() {
-                                        if ('${newDataList?[index].id}' ==
-                                            '${product?.data?[b].id}') {
-                                          a = b;
-                                        }
-                                      });
-                                    }
-
                                     if (dbxId.contains(data?.id.toString()) ==
                                         true) {
                                       toastRed('Please Remove From CART');
                                     } else {
-                                      qtyList[id]++;
+                                      qtyList[index]++;
                                       // pricef = pricei * qtyList[index];
 
                                       setState(() {});
@@ -485,40 +427,41 @@ class _ProductPageState extends State<ProductPage> {
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: InkWell(
-                              onTap: () {
-                                late int a = 0;
-                                for (int b = 0;
-                                    b < product!.data!.length;
-                                    b++) {
-                                  setState(() {
-                                    if ('${newDataList?[index].id}' ==
-                                        '${product?.data?[b].id}') {
-                                      a = b;
-                                    }
-                                  });
-                                }
-                                setState(() {
-                                  list[a] = !list[a];
-                                });
-                                setState(() {
-                                  if (list[a] == true) {
-                                    Datuma? item = product?.data?[a];
-                                    double amount =
-                                        num.parse('${data?.price}').toDouble() *
-                                            qtyList[a];
+                              onTap: function,
+                              // onTap: () {
+                              //   late int a = 0;
+                              //   for (int b = 0;
+                              //       b < product!.data!.length;
+                              //       b++) {
+                              //     setState(() {
+                              //       if ('${newDataList?[index].id}' ==
+                              //           '${product?.data?[b].id}') {
+                              //         a = b;
+                              //       }
+                              //     });
+                              //   }
+                              //   setState(() {
+                              //     list[a] = !list[a];
+                              //   });
+                              //   setState(() {
+                              //     if (list[a] == true) {
+                              //       Datuma? item = product?.data?[a];
+                              //       double amount =
+                              //           num.parse('${data?.price}').toDouble() *
+                              //               qtyList[a];
 
-                                    dbx.add({amount: item});
-                                    dbxId.add('${product?.data?[a].id}');
-                                    print(dbxId);
-                                  } else {
-                                    dbx.removeWhere((element) =>
-                                        element.values.first?.id ==
-                                        product?.data?[index].id);
-                                    dbxId.remove('${product?.data?[a].id}');
-                                    print(dbxId);
-                                  }
-                                });
-                              },
+                              //       dbx.add({amount: item});
+                              //       dbxId.add('${product?.data?[a].id}');
+                              //       print(dbxId);
+                              //     } else {
+                              //       dbx.removeWhere((element) =>
+                              //           element.values.first?.id ==
+                              //           product?.data?[index].id);
+                              //       dbxId.remove('${product?.data?[a].id}');
+                              //       print(dbxId);
+                              //     }
+                              //   });
+                              // },
                               child: dbxId.contains(data?.id.toString()) == true
                                   ? Icon(
                                       Icons.remove_shopping_cart,

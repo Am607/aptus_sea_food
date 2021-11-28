@@ -38,9 +38,9 @@ class _ProductPageState extends State<ProductPage> {
   List<Datuma>? newDataList;
 
 //! for qty button
-  List<int> qtyList = [];
-  void addQty() {
-    qtyList.add(1);
+  Map qtyList = {};
+  void addQty(int id) {
+    qtyList[id] = 1;
   }
 
   //! multy selection
@@ -76,7 +76,7 @@ class _ProductPageState extends State<ProductPage> {
     //!multi selection
     for (int i = 0; i < int.parse('${response.data?.length}'); i++) {
       isAdded(isAdded: false);
-      addQty();
+      addQty( int.parse('${response.data?[i].id}'));
     }
     print(qtyList.length);
     print(list.length);
@@ -261,7 +261,6 @@ class _ProductPageState extends State<ProductPage> {
                       // print(pricei);
                       // return
                       // Text('${newDataList?[n].productName} $n');
-                 
 
                       return item(
                           data: newDataList?[n],
@@ -289,7 +288,7 @@ class _ProductPageState extends State<ProductPage> {
                                       double amount =
                                           num.parse('${newDataList?[n].price}')
                                                   .toDouble() *
-                                              qtyList[a];
+                                              num.parse(qtyList[product?.data?[a].id].toString());
 
                                       dbx.add({amount: item});
                                       dbxId.add('${product?.data?[a].id}');
@@ -304,20 +303,8 @@ class _ProductPageState extends State<ProductPage> {
                                   });
                                 }
                               : () {
-                                  // setState(() {
-                                  //   // list[i] = !list[i];
-
-                                  //   // if (list[i] == true) {
-                                  //   //   dbx.add(product?.data?[i]);
-                                  //   // } else if (list[i] == false) {
-                                  //   //   dbx.removeWhere((element) =>
-                                  //   //       element?.id == product?.data?[i].id);
-                                  //   // }
-                                  //   // data = product?.data?[i];
-
-                                  //   // isSelectedId = '${product?.data?[i].id}';
-                                  //   // selectdIndex = i;
-                                  // });
+                                
+                          
                                 });
                     }),
               ],
@@ -348,7 +335,7 @@ class _ProductPageState extends State<ProductPage> {
               ),
             ),
             subtitle: Text(
-              '\$${num.parse('${data?.price}').toDouble() * qtyList[index]}',
+              '\$${num.parse('${data?.price}').toDouble() * num.parse(qtyList[data?.id].toString())}',
               style: TextStyle(
                 fontSize: 15,
                 color: dbxId.contains(data?.id.toString()) == true
@@ -377,9 +364,9 @@ class _ProductPageState extends State<ProductPage> {
                                         true) {
                                       toastRed('Please Remove From CART');
                                     } else {
-                                      if (qtyList[index] > 1) {
+                                      if (qtyList[data?.id] > 1) {
                                         setState(() {
-                                          qtyList[index]--;
+                                          qtyList[data?.id]--;
 
                                           // product.data?[index].price = pricei * qtyList[index];
                                         });
@@ -399,7 +386,7 @@ class _ProductPageState extends State<ProductPage> {
                                     borderRadius: BorderRadius.circular(3),
                                     color: Colors.white),
                                 child: Text(
-                                  '${qtyList[index]}',
+                                  '${qtyList[data?.id]}',
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 16),
                                 ),
@@ -410,7 +397,7 @@ class _ProductPageState extends State<ProductPage> {
                                         true) {
                                       toastRed('Please Remove From CART');
                                     } else {
-                                      qtyList[index]++;
+                                      qtyList[data?.id]++;
                                       // pricef = pricei * qtyList[index];
 
                                       setState(() {});

@@ -75,6 +75,7 @@ class _PlanPageState extends State<PlanPage> {
                 print(dby);
                 print(dbx);
                 dbxId.clear();
+               
               }
 
               int();

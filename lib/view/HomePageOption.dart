@@ -118,6 +118,8 @@ class _HomePageOptionState extends State<HomePageOption> {
                 height: MediaQuery.of(context).size.height * .075,
                 child: appButtonBlack(
                     function: () {
+                      hddb.clear();
+                      print(hddb);
                       Navigator.push(
                           context,
                           MaterialPageRoute(

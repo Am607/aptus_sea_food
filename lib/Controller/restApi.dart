@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:aptusseafood/Controller/localdb.dart';
 import 'package:aptusseafood/constants/constants.dart';
 import 'package:aptusseafood/model/bulkOrderModel.dart';
 import 'package:aptusseafood/model/bulkProductModel.dart';
 import 'package:aptusseafood/model/homeDelivery/category.dart';
+import 'package:aptusseafood/model/homeDelivery/hdOrderMOdel.dart';
+import 'package:aptusseafood/model/homeDelivery/hdProductDetailsModel.dart';
+import 'package:aptusseafood/model/homeDelivery/hdproductModel.dart';
 import 'package:aptusseafood/model/homeDelivery/postal.dart';
 import 'package:aptusseafood/model/orderModel.dart';
 import 'package:aptusseafood/model/planModel.dart';
@@ -10,6 +15,7 @@ import 'package:aptusseafood/model/privilageCardModel.dart';
 import 'package:aptusseafood/model/productModel.dart';
 import 'package:aptusseafood/model/stripModel.dart';
 import 'package:aptusseafood/model/userInfoModel.dart';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:aptusseafood/model/bulkProductModel.dart' as a;
@@ -225,6 +231,9 @@ class RsetAPi {
     }
   }
 
+//! //////////////////////////////////////////////////////////////
+//! HOME DELIVERY APIS
+
   Future<Postal> postalCodeSearch(String postalcode) async {
     print('post postal code called');
     final endPoint = 'search-postal-code';
@@ -255,6 +264,90 @@ class RsetAPi {
       // print(response.body);
       var joinString = response.body;
       return homedeliveryCategryFromJson(joinString);
+    } else {
+      throw Exception('failed to load');
+    }
+  }
+
+  Future<Hdproduct> hdProducts(String id) async {
+    print('hd product called');
+    final endPoint = 'get-products-home-delivery';
+
+    final response = await client.get(
+      Uri.parse('$baseurl$endPoint/$id'),
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      // print(response.body);
+      var joinString = response.body;
+      return hdproductFromJson(joinString);
+    } else {
+      throw Exception('failed to load');
+    }
+  }
+
+  Future<HdDetails> hdProductDetails(String id) async {
+    print('post category called');
+    final endPoint = 'home-delivery-detailes';
+
+    final response = await client.get(
+      Uri.parse('$baseurl$endPoint/$id'),
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      // print(response.body);
+      var joinString = response.body;
+      return hdDetailsFromJson(joinString);
+    } else {
+      throw Exception('failed to load');
+    }
+  }
+
+  Future<HdOrderModel> hdOrder({
+    required String deliveryCharge,
+    required String address,
+    required String deliveryDate,
+    required String totalAmount,
+  }) async {
+    print('HD Order called');
+    print(deliveryCharge);
+    print(address);
+    print(deliveryDate);
+    print(totalAmount);
+
+    String? token = await storage.read(key: 'token');
+
+    var header = {
+      // 'Content-Type': 'application/json;',
+      'Authorization': 'Bearer $token',
+    };
+
+    final endPont = 'home-delivery-order';
+
+    var body = {
+      'order_amount': totalAmount,
+      'delivery_charge': deliveryCharge,
+      'address': address,
+      'delivery_date': deliveryDate,
+    };
+
+    for (int i = 0; i < hddb.length; i++) {
+      body.addAll({'orderitems[$i][id]': "${hddb[i].values.first?.id}"});
+      body.addAll({'orderitems[$i][price]': "${hddb[i].values.first?.price}"});
+      body.addAll({'orderitems[$i][quantity]': "${hddb[i].keys.first}"});
+    }
+
+    final response = await client.post(
+        Uri.parse(
+          '$baseurl$endPont',
+        ),
+        body: body,
+        headers: header);
+
+    var data = hdOrderModelFromJson(response.body);
+    print(data);
+    if (response.statusCode == 200) {
+      return data;
     } else {
       throw Exception('failed to load');
     }

@@ -174,34 +174,7 @@ class _ProductPageState extends State<ProductPage> {
                   body(
                     context,
                   )
-                  // FutureBuilder<Product>(
-                  //   future: products,
-                  //   builder: (context, snapshot) {
-                  //     if (snapshot.connectionState == ConnectionState.waiting) {
-                  //       return Center(
-                  //         child: CircularProgressIndicator(),
-                  //       );
-                  //     } else {
-                  //       if (snapshot.hasData) {
-                  //         final data = snapshot.data;
-                  //         //  Product? cartData = Product();
-                  //         final cartData = snapshot.data;
-                  //         // print('adding');
-                  //         //TODO: important to fix;
-                  //         // productsList = snapshot.data?.data;
-
-                  //         // newDataList = snapshot.data?.data;
-                  //         return body(context, product: data, cardData: cartData);
-                  //       } else {
-                  //         return Center(
-                  //           child: Text('No Data'),
-                  //         );
-                  //       }
-                  //     }
-                  //     // final List<Datuma>? products = data?.data;
-                  //     // print('the product name is ${data?.data?[0].productName}');
-                  //   },
-                  // ),
+              
                 ],
               ),
         bottomNavigationBar: navigationBar(

@@ -26,3 +26,5 @@ const fishIcon = "assets/fishIcon.png";
 const fishImage = "assets/fishImage.png";
 
 final baseurl = 'http://aptusseafoods.com/api/';
+final imageUrl = 'http://aptusseafoods.com/public/images/category/';
+final productUrl = 'http://aptusseafoods.com/public/images/products/';

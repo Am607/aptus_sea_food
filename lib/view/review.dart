@@ -7,7 +7,7 @@ import 'package:aptusseafood/view/succesPage.dart';
 import 'package:aptusseafood/widgets/CommonWidgets.dart';
 import 'package:flutter/material.dart';
 
-class Review extends StatelessWidget {
+class Review extends StatefulWidget {
   final String paymentMode;
   final String? timesolte;
   final String? date;
@@ -26,20 +26,31 @@ class Review extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _ReviewState createState() => _ReviewState();
+}
+
+class _ReviewState extends State<Review> {
+  bool isloading = false;
+
+  @override
   Widget build(BuildContext context) {
     save() {
-      double amount = double.parse('${this.totalAmount}');
-      double balance = double.parse('${this.remaingAmount}');
-      double advance = amount - balance;
+      setState(() {
+        isloading = true;
+        toast('Order is Processing');
+      });
+      double amount = double.parse('${widget.totalAmount}');
+      double balance = double.parse('${widget.remaingAmount}');
+
       RsetAPi restApi = RsetAPi();
       restApi
           .order(
-        eftNO: '${this.eftNo}',
-        date: '${this.date}',
-        timeslot: '${this.timesolte}',
-        orderamount: '${this.totalAmount}',
-        advance: '$advance',
-        paymentmethod: '${this.paymentMode}',
+        eftNO: '${widget.eftNo}',
+        date: '${widget.date}',
+        timeslot: '${widget.timesolte}',
+        orderamount: '${widget.totalAmount}',
+        advance: '$balance',
+        paymentmethod: '${widget.paymentMode}',
       )
           .then((value) {
         print(value.status);
@@ -53,14 +64,15 @@ class Review extends StatelessWidget {
             (Route<dynamic> route) => false,
           );
         } else if (value.message == 'time slot fully booked') {
+          isloading = false;
           toast('time slot fully booked');
         } else {
+          isloading = false;
           toast('Something went wrong');
         }
       });
     }
 
-    print(this.paymentMode);
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -72,18 +84,22 @@ class Review extends StatelessWidget {
             style: TextStyle(color: Colors.white),
           ),
         ),
-        body: FutureBuilder<UserInfo>(
-          future: RsetAPi().getUserInfo(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            }
-            return body(context, snapshot.data);
-          },
-        ),
+        body: isloading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : FutureBuilder<UserInfo>(
+                future: RsetAPi().getUserInfo(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  return body(context, snapshot.data);
+                },
+              ),
         bottomNavigationBar: navigationBar(
             next: () {
-              save();
+             isloading ? (){} : save();
             },
             context: context,
             back: () {
@@ -152,14 +168,14 @@ class Review extends StatelessWidget {
 
         // rowWidget(name: 'Product Ordered', price: '${this.data!.productName}'),
 
-        rowWidget(name: 'Amount', price: '\$${this.totalAmount}'),
-        rowWidget(name: 'Payment Mode', price: '${this.paymentMode}'),
+        rowWidget(name: 'Amount', price: '\$${widget.totalAmount}'),
+        rowWidget(name: 'Payment Mode', price: '${widget.paymentMode}'),
         // rowWidget(name: 'Pick Up', price: '${this.date}'),
-        rowWidget(name: 'Balance', price: '${this.remaingAmount}'),
-        rowWidget(name: 'Date of Pickup', price: '${this.date}'),
-        rowWidget(name: 'EFTPOS Receipt No', price: '${this.eftNo}'),
+        rowWidget(name: 'Balance', price: '${widget.remaingAmount}'),
+        rowWidget(name: 'Date of Pickup', price: '${widget.date}'),
+        rowWidget(name: 'EFTPOS Receipt No', price: '${widget.eftNo}'),
         // rowWidget(name: 'Location', price: '${userInfo.data!.pickUpLocation}'),
-        rowWidget(name: 'Time slot', price: '${this.timesolte}'),
+        rowWidget(name: 'Time slot', price: '${widget.timesolte}'),
         SizedBox(
           height: 200,
         )
